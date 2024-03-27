@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>DimigoOut</title>
+
+    <link rel="stylesheet" href="css/newGlobal.css">
+    <link rel="stylesheet" href="css/new.css">
+
+<!--    font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gmarket Sans TTF:wght@300;500;700&display=swap" />
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <div class="subtitle">
+                그래그래 우리는 개쩌는 <span class="highlight">웹플</span>이다
+            </div>
+            <div class="maintitle highlight">
+                DimigoOut <span class="version">v.103_alpha</span>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu_element aligner"></div>
+            <div class="menu_element menu_element-container _1">
+                <div class="menutitle alim">
+                    <div class="subtitle">어 오늘 종례 뭐였더라</div>
+                    <div class="maintitle highlight">알림장</div>
+                </div>
+                <br>
+                <div class="menutext">
+<!--                    <span class="date" th:text="${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일 ')}"></span>-->
+                    <span class="date" th:text="|마지막 수정일자: ${alim.getDate()}|"></span>
+                    <textarea name="alim" id="alim" class="noticement_area" th:text="${alim.getText()}"></textarea>
+                </div>
+            </div>
+            <div class="menu_element menu_element-container _2">
+                <div class="menu_element menu_element-container _1">
+                    <div class="menutitle alim">
+                        <div class="subtitle">언제...끝나.....?</div>
+                        <div class="maintitle highlight">일과 알리미</div>
+                    </div>
+                    <div class="time_show">
+                        <div class="grouper">
+                            <div class="current"></div>
+                            <div class="progress_bar"><div class="timeLeft"></div><div class="inner_progress_bar">&nbsp;</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu_element menu_element-container _2" id="seat_btn">
+                    <div class="menutitle seat_list">
+                        <div class="subtitle">어디로 가야하오</div>
+                        <div class="maintitle highlight">자리배정</div>
+                    </div>
+<!--                    <span class="image image_seat">a</span>-->
+                </div>
+            </div>
+            <div class="menu_element menu_element-container _3">
+                <div class="menutitle alim">
+                    <div class="subtitle">아 ㅋㅋ 어쩔건데</div>
+                    <div class="maintitle highlight">디미 아웃사이드</div>
+                    개발중
+                </div>
+            </div>
+            <div class="menu_element aligner"></div>
+        </div>
+    </div>
+    <script src="js/global.js"></script>
+    <script src="js/new.js"></script>
+    <script>
+        initialize()
+    </script>
+</body>
+</html>

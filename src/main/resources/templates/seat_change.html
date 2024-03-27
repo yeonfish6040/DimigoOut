@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>자리배치</title>
+
+    <link rel="stylesheet" href="css/newGlobal.css">
+    <link rel="stylesheet" href="css/seat_chagne.css">
+
+<!--    font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gmarket Sans TTF:wght@300;500;700&display=swap" />
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <div class="subtitle">
+                그래그래 우리는 개쩌는 <span class="highlight">웹플</span>이다
+            </div>
+            <div class="maintitle highlight">
+                DimigoOut <span class="version">v.103_alpha</span>
+            </div>
+        </div>
+
+        <div class="main_container">
+            <div class="subsubtitle">
+                <div class="subsubofsubsub">
+                    어디로 가야하암
+                </div>
+                <div class="subofsubsub highlight">
+                    자리배치
+                </div>
+            </div>
+            <br>
+            <div class="seat_window">
+                <div class="board">
+                    <span class="board_text">칠판</span>
+                    <div class="seat_list">
+
+                    </div>
+                </div>
+                <div class="sidebar">
+                    <div class="upper">
+                        <input type="number" name="사람 박명수" id="PNum" class="input" placeholder="사람 명수를 입력하세요">
+                        <input type="number" name="가로줄수" id="CNum" class="input" placeholder="가로줄수를 입력하세요">
+                    </div>
+                    <div class="footer">
+                        <input type="button" value="설정" id="setPNum" class="btn set">
+                        <input type="button" value="시작" id="runMachine" class="btn run">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/global.js"></script>
+    <script src="js/seat_change.js"></script>
+</body>
+</html>

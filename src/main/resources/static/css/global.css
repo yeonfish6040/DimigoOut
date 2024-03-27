@@ -1,0 +1,61 @@
+body {
+  margin: 0;
+  line-height: normal;
+}
+
+:root {
+  /* fonts */
+  --font-fredoka: Fredoka;
+  --font-gmarket-sans-ttf: "Gmarket Sans TTF";
+
+  /* font sizes */
+  --font-size-31xl: 50px;
+  --font-size-11xl: 30px;
+  --font-size-21xl: 40px;
+  --font-size-mini: 15px;
+  --font-size-16xl: 35px;
+  --font-size-2xl: 21px;
+  --font-size-9xl: 28px;
+  --font-size-xl: 20px;
+  --font-size-base: 16px;
+  --font-size-mid: 17px;
+  --font-size-lg: 18px;
+  --font-size-81xl: 100px;
+
+  /* Colors */
+  --color-white: #fff;
+  --color-palevioletred-100: #df4d77;
+  --color-palevioletred-200: #d05276;
+  --color-black: #000;
+  --color-gray-100: rgba(255, 255, 255, 0);
+  --color-gray-200: rgba(0, 0, 0, 0.25);
+
+  /* Gaps */
+  --gap-xl: 20px;
+  --gap-7xs: 6px;
+  --gap-14xl: 33px;
+  --gap-0: 0px;
+  --gap-base: 16px;
+  --gap-5xl: 24px;
+
+  /* Paddings */
+  --padding-3xl: 22px;
+  --padding-xl: 20px;
+  --padding-7xl: 26px;
+  --padding-lg: 18px;
+  --padding-base: 16px;
+  --padding-5xl: 24px;
+  --padding-4xl: 23px;
+  --padding-2xs: 11px;
+  --padding-11xl: 30px;
+  --padding-12xs: 1px;
+  --padding-9xs: 4px;
+  --padding-6xl: 25px;
+  --padding-10xs: 3px;
+  --padding-19xl: 38px;
+
+  /* Border radiuses */
+  --br-smi: 13px;
+  --br-4xs: 9px;
+  --br-10xs: 3px;
+}

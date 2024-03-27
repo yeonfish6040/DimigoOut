@@ -1,0 +1,82 @@
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: white;
+
+    padding-top: 20px;
+}
+
+.highlight {
+    color: #d05276;
+}
+
+/*header {*/
+/*    position: absolute;*/
+
+/*    opacity: 0.6;*/
+/*    text-align: center;*/
+
+/*    top: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+
+/*    height: 30px;*/
+
+/*    border: 2px solid lightpink;*/
+/*    background-color: lightpink;*/
+/*}*/
+
+.container {
+    position: absolute;
+    top: 5vh;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.container > .title {
+    text-align: center;
+}
+
+.container > .title > .subtitle {
+    font-family: "Gmarket Sans TTF", SansSerif;
+    font-size: 1.3rem;
+    font-weight: 500;
+
+}
+
+.container > .title > .maintitle {
+    align-self: stretch;
+    letter-spacing: -0.01em;
+
+    font-family: Fredoka;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 7em;
+
+    line-height: 150%;
+
+}
+
+.container > .title > .maintitle > .version {
+    font-size: 2.5rem;
+}
+
+@media only screen and (max-width: 1077px) {
+    .container > .title > .maintitle {
+        font-size: 4em;
+    }
+    .container > .title > .maintitle > .version {
+        font-size: 1.2rem;
+    }
+}
