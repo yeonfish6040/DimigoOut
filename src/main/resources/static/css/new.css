@@ -88,6 +88,7 @@
 .menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .progress_bar {
     width: 100%;
 
+    overflow: hidden;
     background-color: lightgray;
     border-radius: 20px;
 

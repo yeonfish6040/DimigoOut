@@ -119,7 +119,7 @@ public class MainController {
     @RequestMapping("get/timetable")
     public String timetable() throws JSONException {
         // https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE=1&CLASS_NM=3&Type=json&TI_FROM_YMD=20240326&TI_TO_YMD=20240326&KEY=c2faa1eafe12484fae5615db4b90ff4f
-        Calendars calendars = new Calendars(Locale.KOREA);
+        Calendars calendars = new Calendars(Locale.KOREAN);
         String date = calendars.format(calendars.createNow(), "yyyyMMdd");
 
         String url = "https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE=1&CLASS_NM=3&Type=json&TI_FROM_YMD="+date+"&TI_TO_YMD="+date+"&KEY="+Constant.NeisApiKey;
