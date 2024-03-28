@@ -1,5 +1,6 @@
 let timetable;
 let lastTime;
+let currentSubject = "";
 let lastTyping = new Date().getTime();
 let lastText = document.getElementById("alim").value;
 let saveMsg = "DimigoOut알림저장됨".split("");
@@ -14,7 +15,7 @@ let timeSequence = [
     {
         id: "breakfast",
         from: "0720",
-        to: "0810",
+        to: "0815",
         name: "아침식사"
     },
     {
@@ -180,17 +181,20 @@ function updateCurrentTime() {
             let perio = lastTime.id.replace("perio_", "");
 
             let getSubject = new XMLHttpRequest();
-            getSubject.open("GET", "/get/timetable")
+            getSubject.open("GET", "/get/timetable");
             getSubject.onload = (e) => {
                 let result = JSON.parse(e.target.responseText)["hisTimetable"][1]["row"];
-                let currentSubject = result.filter(s => s.PERIO == perio)[0]["ITRT_CNTNT"];
+                currentSubject = " ("+result.filter(s => s.PERIO == perio)[0]["ITRT_CNTNT"]+")";
                 console.log(currentSubject)
             }
-            getSubject.send()
+            getSubject.send();
         }
-
-        document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .current").innerText = current.name;
     }
+    let timeline = "";
+    if (document.fullscreenElement) {
+        timeline = "\n"+current.from.toString().substring(0,2)+":"+current.from.toString().substring(2,4)+" ~ "+current.to.toString().substring(0,2)+":"+current.to.toString().substring(2,4)
+    }
+    document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .current").innerText = current.name+currentSubject+timeline;
 }
 
 function alimSaver() {

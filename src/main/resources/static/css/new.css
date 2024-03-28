@@ -138,6 +138,8 @@
     flex-direction: column;
     justify-content: space-around;
 
+    background-color: rgba(211, 211, 211, 0.5) !important;
+
     font-size: 2em;
 }
 
