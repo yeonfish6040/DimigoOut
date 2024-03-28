@@ -51,8 +51,8 @@ public class MainController {
         params.put("client_id", Constant.GoogleOauthClientId);
         params.put("client_secret", Constant.GoogleOauthClientPw);
         params.put("grant_type", "authorization_code");
-        params.put("redirect_uri", "https://localhost/auth");
-//        params.put("redirect_uri", "https://dimigo.site/auth");
+//        params.put("redirect_uri", "https://localhost/auth");
+        params.put("redirect_uri", "https://dimigo.site/auth");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(params.toString(), headers);

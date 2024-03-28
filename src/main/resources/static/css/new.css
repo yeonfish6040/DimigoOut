@@ -123,11 +123,20 @@
     height: 50vh;
 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+
+    justify-content: space-around;
+}
+
+.fullscreen > .time_show > .grouper > .current {
+    font-size: 3em;
 }
 
 .fullscreen > .time_show > .grouper > .progress_bar {
     height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 
     font-size: 2em;
 }
