@@ -10,25 +10,25 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.expression.Calendars;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 
@@ -51,8 +51,8 @@ public class MainController {
         params.put("client_id", Constant.GoogleOauthClientId);
         params.put("client_secret", Constant.GoogleOauthClientPw);
         params.put("grant_type", "authorization_code");
-//        params.put("redirect_uri", "https://localhost/auth");
-        params.put("redirect_uri", "https://dimigo.site/auth");
+        params.put("redirect_uri", "https://localhost/auth");
+//        params.put("redirect_uri", "https://dimigo.site/auth");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(params.toString(), headers);
@@ -114,6 +114,21 @@ public class MainController {
                 return "Server cannot process your request";
             }
         }
+    }
+
+//    @RequestMapping("get/dimiOutside")
+//    public String getDimiOutSide() {
+//
+//    }
+
+    @RequestMapping(value = "get/background", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] getImage() throws IOException {
+        InputStream in = null;
+        if (LocalTime.now(ZoneId.of("Asia/Seoul")).isBefore(LocalTime.of(17, 0)))
+            in = new ClassPathResource("static/image/background_morning.jpg").getInputStream();
+        else
+            in = new ClassPathResource("static/image/background_night.jpg").getInputStream();
+        return IOUtils.toByteArray(in);
     }
 
     @RequestMapping("get/timetable")

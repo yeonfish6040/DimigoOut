@@ -102,6 +102,40 @@
     border-radius: 20px;
 }
 
+.fullscreen {
+    background: url("/get/background") no-repeat center center;
+    background-size: cover;
+
+    border-radius: 0;
+}
+
+.fullscreen > .time_show {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 100% !important;
+}
+
+.fullscreen > .time_show > .grouper {
+    height: 50vh;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.fullscreen > .time_show > .grouper > .progress_bar {
+    height: 40%;
+
+    font-size: 2em;
+}
+
+.fullscreen > .time_show > .grouper > .progress_bar {
+    background-color: rgba(211, 211, 211, 0.5);
+}
+
 @media only screen and (max-width: 1077px) {
     .menu {
         display: block;

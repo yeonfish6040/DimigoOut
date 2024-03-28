@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
     implementation group: 'org.json', name: 'json', version: '20090211'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'

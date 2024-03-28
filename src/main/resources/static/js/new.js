@@ -143,6 +143,20 @@ function initialize() {
 
     setInterval(alimSaver, 100);
     setInterval(updateCurrentTime, 100);
+
+    document.getElementById("alim").addEventListener("keydown", lastTypingUpdater);
+    document.getElementById("full_screen-btn").addEventListener("click", requestFullscreen)
+    document.getElementById("seat_btn").addEventListener("click", () => location.href = "/seat_change");
+}
+
+function requestFullscreen() {
+    if (!document.fullscreenElement) {
+        document.getElementById("full_screen-btn").requestFullscreen();
+        document.getElementById("full_screen-btn").classList.add("fullscreen");
+    } else {
+        document.exitFullscreen();
+        document.getElementById("full_screen-btn").classList.remove("fullscreen");
+    }
 }
 
 function updateCurrentTime() {
@@ -206,6 +220,3 @@ function alimSaver() {
 function lastTypingUpdater(event) {
     lastTyping = new Date().getTime()
 }
-
-document.getElementById("alim").addEventListener("keydown", lastTypingUpdater);
-document.getElementById("seat_btn").addEventListener("click", () => location.href = "/seat_change");
