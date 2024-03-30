@@ -41,6 +41,10 @@
     font-weight: 700;
 }
 
+.menu > .menu_element.menu_element-container._1 {
+    overflow: hidden;
+}
+
 .menu > .menu_element.menu_element-container._1 > .menutext {
     width: 100%;
     height: 100%;
@@ -106,9 +110,14 @@
 
 .fullscreen {
     background: url("/get/background") no-repeat center center;
+    backdrop-filter: blur(5px);
     background-size: cover;
 
     border-radius: 0;
+}
+
+.fullscreen > .menutitle {
+    display: none;
 }
 
 .fullscreen > .time_show {
@@ -117,6 +126,8 @@
     left: 0;
     right: 0;
     bottom: 0;
+
+    backdrop-filter: blur(5px) brightness(80%);
 
     height: 100% !important;
 }
@@ -127,15 +138,22 @@
     display: flex;
     flex-direction: column;
 
+    align-items: center;
+
     justify-content: space-around;
 }
 
 .fullscreen > .time_show > .grouper > .current {
     font-size: 3em;
+
+    text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
 }
 
 .fullscreen > .time_show > .grouper > .progress_bar {
     height: 40%;
+    width: 92% !important;
+    padding: 6px !important;
+
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -143,6 +161,7 @@
     background-color: rgba(211, 211, 211, 0.5) !important;
 
     font-size: 2em;
+    -webkit-text-stroke: 1px #000000;
 }
 
 .fullscreen > .time_show > .grouper > .progress_bar {

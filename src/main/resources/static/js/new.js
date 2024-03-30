@@ -37,16 +37,34 @@ let timeSequence = [
         name: "1교시"
     },
     {
+        id: "rest",
+        from: "0950",
+        to: "1000",
+        name: "쉬는시간"
+    },
+    {
         id: "perio_2",
         from: "1000",
         to: "1050",
         name: "2교시"
     },
     {
+        id: "rest",
+        from: "1050",
+        to: "1100",
+        name: "쉬는시간"
+    },
+    {
         id: "perio_3",
         from: "1100",
         to: "1150",
         name: "3교시"
+    },
+    {
+        id: "rest",
+        from: "1150",
+        to: "1200",
+        name: "쉬는시간"
     },
     {
         id: "perio_4",
@@ -67,10 +85,22 @@ let timeSequence = [
         name: "5교시"
     },
     {
+        id: "rest",
+        from: "1440",
+        to: "1450",
+        name: "쉬는시간"
+    },
+    {
         id: "perio_6",
         from: "1450",
         to: "1540",
         name: "6교시"
+    },
+    {
+        id: "rest",
+        from: "1540",
+        to: "1550",
+        name: "쉬는시간"
     },
     {
         id: "perio_7",
@@ -129,6 +159,12 @@ let timeSequence = [
     {
         id: "hakbonggwan",
         from: "2250",
+        to: "2400",
+        name: "생활관 생활 ㅎ"
+    },
+    {
+        id: "hakbonggwan",
+        from: "0000",
         to: "0630",
         name: "생활관 생활 ㅎ"
     }
@@ -188,37 +224,38 @@ function updateCurrentTime() {
                 console.log(currentSubject)
             }
             getSubject.send();
-        }
+        }else currentSubject = ""
+
     }
     let timeline = "";
     if (document.fullscreenElement) {
         timeline = "\n"+current.from.toString().substring(0,2)+":"+current.from.toString().substring(2,4)+" ~ "+current.to.toString().substring(0,2)+":"+current.to.toString().substring(2,4)
-    }
+    } else document.getElementById("full_screen-btn").classList.remove("fullscreen");
     document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .current").innerText = current.name+currentSubject+timeline;
 }
 
 function alimSaver() {
     if (new Date().getTime()-lastTyping > 1000 && document.getElementById("alim").value != lastText) {
-        lastText = document.getElementById("alim").value
+        lastText = document.getElementById("alim").value;
 
         let save = new XMLHttpRequest();
-        save.open("POST", "/alim/save")
+        save.open("POST", "/alim/save");
         save.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         save.onload = (e) => {
             if (e.target.status === 200) {
                 let i = 0;
                 let saveMsgInterval = setInterval(() => {
                     if (i > 13) return clearInterval(saveMsgInterval);
-                    saveMsg.push(saveMsg.splice(0, 1))
-                    document.title = saveMsg.join("").substring(0, 9)
+                    saveMsg.push(saveMsg.splice(0, 1));
+                    document.title = saveMsg.join("").substring(0, 9);
                     i++;
-                }, 200)
+                }, 200);
             }else {
-                if (e.target.status === 403) alert("권한이 없습니다!")
-                console.error(e)
+                if (e.target.status === 403) alert("권한이 없습니다!");
+                console.error(e);
             }
         }
-        save.send("text="+lastText)
+        save.send("text="+lastText);
     }
 }
 function lastTypingUpdater(event) {
