@@ -181,17 +181,24 @@ function initialize() {
     setInterval(alimSaver, 100);
     setInterval(updateCurrentTime, 100);
 
+    document.addEventListener("fullscreenchange", checkFullscreen);
     document.getElementById("alim").addEventListener("keydown", lastTypingUpdater);
-    document.getElementById("full_screen-btn").addEventListener("click", requestFullscreen)
+    document.getElementById("full_screen-btn").addEventListener("click", toggleFullscreen);
     document.getElementById("seat_btn").addEventListener("click", () => location.href = "/seat_change");
 }
 
-function requestFullscreen() {
+function toggleFullscreen(e) {
     if (!document.fullscreenElement) {
         document.getElementById("full_screen-btn").requestFullscreen();
-        document.getElementById("full_screen-btn").classList.add("fullscreen");
     } else {
         document.exitFullscreen();
+    }
+}
+
+function checkFullscreen(e) {
+    if (!document.fullscreenElement) {
+        document.getElementById("full_screen-btn").classList.add("fullscreen");
+    } else {
         document.getElementById("full_screen-btn").classList.remove("fullscreen");
     }
 }
@@ -228,9 +235,6 @@ function updateCurrentTime() {
 
     }
     let timeline = "";
-    if (document.fullscreenElement) {
-        timeline = "\n"+current.from.toString().substring(0,2)+":"+current.from.toString().substring(2,4)+" ~ "+current.to.toString().substring(0,2)+":"+current.to.toString().substring(2,4)
-    } else document.getElementById("full_screen-btn").classList.remove("fullscreen");
     document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .current").innerText = current.name+currentSubject+timeline;
 }
 
