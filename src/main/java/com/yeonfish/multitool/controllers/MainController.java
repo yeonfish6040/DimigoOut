@@ -59,7 +59,7 @@ public class MainController {
 
         RestTemplate rt = new RestTemplate();
 
-        log.info(params.toString());
+//        log.info(params.toString());
 
         ResponseEntity<String> exchange = rt.exchange(
                 "https://oauth2.googleapis.com/token",
@@ -81,6 +81,8 @@ public class MainController {
                 entity,
                 String.class
         );
+
+        log.info("Login "+exchange.getBody());
 
         JSONObject result = new JSONObject(exchange.getBody());
 
@@ -124,8 +126,10 @@ public class MainController {
     @RequestMapping(value = "get/background", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] getImage() throws IOException {
         InputStream in = null;
-        if (LocalTime.now(ZoneId.of("Asia/Seoul")).isBefore(LocalTime.of(17, 0)))
+        if (LocalTime.now(ZoneId.of("Asia/Seoul")).isBefore(LocalTime.of(13, 0)) && LocalTime.now(ZoneId.of("Asia/Seoul")).isAfter(LocalTime.of(4, 0)))
             in = new ClassPathResource("static/image/background_morning.jpg").getInputStream();
+        else if (LocalTime.now(ZoneId.of("Asia/Seoul")).isBefore(LocalTime.of(17, 0)) && LocalTime.now(ZoneId.of("Asia/Seoul")).isAfter(LocalTime.of(8, 0)))
+            in = new ClassPathResource("static/image/background_evening.jpg").getInputStream();
         else
             in = new ClassPathResource("static/image/background_night.jpg").getInputStream();
         return IOUtils.toByteArray(in);

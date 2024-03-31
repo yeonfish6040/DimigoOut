@@ -38,7 +38,7 @@ public class WebController {
 
     @RequestMapping("/")
     public String index(Model model) {
-        log.info(alimManageService.getAlim());
+//        log.info(alimManageService.getAlim());
         model.addAttribute("alim", alimManageService.getAlim());
         return "new";
     }
