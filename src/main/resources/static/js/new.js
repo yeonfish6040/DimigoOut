@@ -196,7 +196,7 @@ function toggleFullscreen(e) {
 }
 
 function checkFullscreen(e) {
-    if (!document.fullscreenElement) {
+    if (document.fullscreenElement) {
         document.getElementById("full_screen-btn").classList.add("fullscreen");
     } else {
         document.getElementById("full_screen-btn").classList.remove("fullscreen");
