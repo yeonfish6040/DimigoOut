@@ -42,12 +42,6 @@ public class WebController {
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model) throws JSONException {
 //        log.info(alimManageService.getAlim());
-
-        String something = getSessionId(request.getCookies());
-        String id = (new JSONObject((String) (request.getSession().getAttribute(something)))).getString("id");
-        if (!(jokeDAO.getJoke(id) == null || jokeDAO.getJoke(id).equals(""))) {
-            return "joke";
-        }
         model.addAttribute("alim", alimManageService.getAlim());
         return "new";
     }

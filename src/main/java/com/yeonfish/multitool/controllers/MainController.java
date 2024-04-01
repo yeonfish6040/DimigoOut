@@ -99,19 +99,14 @@ public class MainController {
     }
 
     @RequestMapping("joke")
-    public void joke(@RequestParam("flag") String flag, HttpServletRequest request) throws JSONException {
+    public String joke(@RequestParam("flag") String flag, HttpServletRequest request) throws JSONException {
         // db는 lyj.kr 유저 네임은 joke.
         // 이 서버의 개발자는 너무나도 유저 pw를 짓기 귀찮은 관계로 비밀번호를 무언가를 해싱한 값으로 설정해버렸네요.
         // 멍충멍충
         if (flag.equals("FLAG{something}")) {
-            String something = getSessionId(request.getCookies());
-            String id = (new JSONObject((String) (request.getSession().getAttribute(something)))).getString("id");
-            if (jokeDAO.getJoke(id) == null || jokeDAO.getJoke(id).equals("")) {
-                jokeDAO.setJoke(id);
-            }else {
-                jokeDAO.delJoke(id);
-            }
+            return "success";
         }
+        return "fail";
     }
 
     @RequestMapping(value = "alim/save", method = RequestMethod.POST)
