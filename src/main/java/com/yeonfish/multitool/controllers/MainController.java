@@ -55,8 +55,8 @@ public class MainController {
         params.put("client_id", Constant.GoogleOauthClientId);
         params.put("client_secret", Constant.GoogleOauthClientPw);
         params.put("grant_type", "authorization_code");
-        params.put("redirect_uri", "https://localhost/auth");
-//        params.put("redirect_uri", "https://dimigo.site/auth");
+//        params.put("redirect_uri", "https://localhost/auth");
+        params.put("redirect_uri", "https://dimigo.site/auth");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(params.toString(), headers);
@@ -99,12 +99,12 @@ public class MainController {
     }
 
     @RequestMapping("joke")
-    public void joke(@RequestParam("flag") String flag, HttpServletRequest request) {
+    public void joke(@RequestParam("flag") String flag, HttpServletRequest request) throws JSONException {
         // db는 lyj.kr 유저 네임은 joke.
         // 이 서버의 개발자는 너무나도 유저 pw를 짓기 귀찮은 관계로 비밀번호를 무언가를 해싱한 값으로 설정해버렸네요.
         // 멍충멍충
         if (flag.equals("FLAG{something}")) {
-            jokeDAO.setJoke(getSessionId(request.getCookies()));
+            jokeDAO.setJoke((new JSONObject(request.getSession().getAttribute(getSessionId(request.getCookies())))).getString("id"));
         }
     }
 
