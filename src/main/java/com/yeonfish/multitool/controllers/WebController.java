@@ -1,9 +1,12 @@
 package com.yeonfish.multitool.controllers;
 
+import com.yeonfish.multitool.beans.dao.JokeDAO;
 import com.yeonfish.multitool.beans.vo.AlimiVO;
 import com.yeonfish.multitool.devController.logger;
 import com.yeonfish.multitool.services.AlimManageService;
 import com.yeonfish.multitool.util.UUID;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,10 +29,8 @@ public class WebController {
     @Autowired
     AlimManageService alimManageService;
 
-    @RequestMapping("/new")
-    public String newA() {
-        return "new";
-    }
+    @Autowired
+    JokeDAO jokeDAO;
 
     @RequestMapping("/seat_change")
     public String seatChange() {
@@ -37,9 +38,24 @@ public class WebController {
     }
 
     @RequestMapping("/")
-    public String index(Model model) {
+    public String index(HttpServletRequest request, Model model) {
 //        log.info(alimManageService.getAlim());
+
+        if (jokeDAO.getJoke(getSessionId(request.getCookies())) == null || jokeDAO.getJoke(getSessionId(request.getCookies())).equals("")) {
+            return "joke";
+        }
         model.addAttribute("alim", alimManageService.getAlim());
         return "new";
+    }
+
+    private String getSessionId(Cookie[] cookies) {
+        String sessionId = "";
+        if (cookies != null)
+            for (Cookie c : cookies)
+                if (c.getName().equals("sessionId")) {
+                    sessionId = c.getValue();
+                }
+
+        return sessionId;
     }
 }

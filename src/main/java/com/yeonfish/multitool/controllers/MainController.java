@@ -3,6 +3,7 @@ package com.yeonfish.multitool.controllers;
 import com.yeonfish.multitool.Constant;
 import com.yeonfish.multitool.beans.dao.AdminDAO;
 import com.yeonfish.multitool.beans.dao.AlimiDAO;
+import com.yeonfish.multitool.beans.dao.JokeDAO;
 import com.yeonfish.multitool.beans.vo.AlimiVO;
 import com.yeonfish.multitool.devController.logger;
 import com.yeonfish.multitool.services.AlimManageService;
@@ -44,6 +45,9 @@ public class MainController {
     @Autowired
     private AdminDAO adminDAO;
 
+    @Autowired
+    private JokeDAO jokeDAO;
+
     @RequestMapping("/auth")
     public String auth(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
         JSONObject params = new JSONObject();
@@ -51,8 +55,8 @@ public class MainController {
         params.put("client_id", Constant.GoogleOauthClientId);
         params.put("client_secret", Constant.GoogleOauthClientPw);
         params.put("grant_type", "authorization_code");
-//        params.put("redirect_uri", "https://localhost/auth");
-        params.put("redirect_uri", "https://dimigo.site/auth");
+        params.put("redirect_uri", "https://localhost/auth");
+//        params.put("redirect_uri", "https://dimigo.site/auth");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(params.toString(), headers);
@@ -92,6 +96,13 @@ public class MainController {
 
         response.sendRedirect("/");
         return "success";
+    }
+
+    @RequestMapping("joke")
+    public void joke(@RequestParam("flag") String flag, HttpServletRequest request) {
+        if (flag.equals("FLAG{something}")) {
+            jokeDAO.setJoke(getSessionId(request.getCookies()));
+        }
     }
 
     @RequestMapping(value = "alim/save", method = RequestMethod.POST)

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashing Gradient Background</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #ff0000, #ff8800, #ffff00, #00ff00, #0000ff, #ff00ff, #ff0000);
+            background-size: 600% 100%;
+            animation: flashing-gradient 2s linear infinite alternate;
+        }
+        .div{
+            color: #2563EB;
+            font-size: 20px;
+            text-align: center;
+        }
+        .dimigo_boom_boom{
+            color: white;
+            text-align: center;
+
+        }
+        .seonlinout-v103{
+            color: #2563EB;
+            font-size: 80px;
+        }
+        @keyframes flashing-gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="frame-parent">
+    <div class="wrapper">
+        <div class="div">
+            <span>그래그래 우리는 개쩌는 </span>
+            <span class="span">선린인</span>
+            <span>이다</span>
+        </div>
+        <div class="dimigo_boom_boom">디미고는 선린이 접수한다</div>
+
+        <div class="dimigo_boom_boom">디미고아웃을 쓰려면 FLAG 찾으세요 ㅋ</div>
+    </div>
+    <div class="seonlinout-v103">
+        <span>SeonlinOut </span>
+        <span class="v103">v.103</span>
+    </div>
+</div>
+</body>
+</html>
