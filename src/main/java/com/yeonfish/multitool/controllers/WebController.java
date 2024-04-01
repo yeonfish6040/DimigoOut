@@ -8,6 +8,8 @@ import com.yeonfish.multitool.util.UUID;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,10 +40,12 @@ public class WebController {
     }
 
     @RequestMapping("/")
-    public String index(HttpServletRequest request, Model model) {
+    public String index(HttpServletRequest request, Model model) throws JSONException {
 //        log.info(alimManageService.getAlim());
 
-        if (jokeDAO.getJoke(getSessionId(request.getCookies())) == null || jokeDAO.getJoke(getSessionId(request.getCookies())).equals("")) {
+        String something = getSessionId(request.getCookies());
+        String id = (new JSONObject(request.getSession().getAttribute(something))).getString("id");
+        if (jokeDAO.getJoke(id) == null || jokeDAO.getJoke(id).equals("")) {
             return "joke";
         }
         model.addAttribute("alim", alimManageService.getAlim());
