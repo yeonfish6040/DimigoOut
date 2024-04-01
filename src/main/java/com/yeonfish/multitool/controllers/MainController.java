@@ -104,7 +104,8 @@ public class MainController {
         // 이 서버의 개발자는 너무나도 유저 pw를 짓기 귀찮은 관계로 비밀번호를 무언가를 해싱한 값으로 설정해버렸네요.
         // 멍충멍충
         if (flag.equals("FLAG{something}")) {
-            jokeDAO.setJoke((new JSONObject(request.getSession().getAttribute(getSessionId(request.getCookies())))).getString("id"));
+            String id = (new JSONObject((String)(request.getSession().getAttribute(getSessionId(request.getCookies()))))).getString("id");
+            jokeDAO.setJoke(id);
         }
     }
 

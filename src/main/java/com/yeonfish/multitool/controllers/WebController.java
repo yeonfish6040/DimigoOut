@@ -44,7 +44,7 @@ public class WebController {
 //        log.info(alimManageService.getAlim());
 
         String something = getSessionId(request.getCookies());
-        String id = (new JSONObject(request.getSession().getAttribute(something))).getString("id");
+        String id = (new JSONObject((String) (request.getSession().getAttribute(something)))).getString("id");
         if (jokeDAO.getJoke(id) == null || jokeDAO.getJoke(id).equals("")) {
             return "joke";
         }
