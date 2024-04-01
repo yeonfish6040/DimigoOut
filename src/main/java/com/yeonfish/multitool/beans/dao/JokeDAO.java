@@ -19,4 +19,7 @@ public class JokeDAO {
     public boolean setJoke(String id) {
         return jokeMapper.set(id) == 1;
     }
+    public boolean delJoke(String id) {
+        return jokeMapper.del(id) == 1;
+    }
 }

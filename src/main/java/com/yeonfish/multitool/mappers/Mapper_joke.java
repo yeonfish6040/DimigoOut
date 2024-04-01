@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface Mapper_joke {
     public String get(String id);
     public int set(String id);
+    public int del(String id);
 }

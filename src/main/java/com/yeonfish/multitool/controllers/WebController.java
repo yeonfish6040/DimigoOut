@@ -45,7 +45,7 @@ public class WebController {
 
         String something = getSessionId(request.getCookies());
         String id = (new JSONObject((String) (request.getSession().getAttribute(something)))).getString("id");
-        if (jokeDAO.getJoke(id) == null || jokeDAO.getJoke(id).equals("")) {
+        if (!(jokeDAO.getJoke(id) == null || jokeDAO.getJoke(id).equals(""))) {
             return "joke";
         }
         model.addAttribute("alim", alimManageService.getAlim());

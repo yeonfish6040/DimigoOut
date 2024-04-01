@@ -104,8 +104,13 @@ public class MainController {
         // 이 서버의 개발자는 너무나도 유저 pw를 짓기 귀찮은 관계로 비밀번호를 무언가를 해싱한 값으로 설정해버렸네요.
         // 멍충멍충
         if (flag.equals("FLAG{something}")) {
-            String id = (new JSONObject((String)(request.getSession().getAttribute(getSessionId(request.getCookies()))))).getString("id");
-            jokeDAO.setJoke(id);
+            String something = getSessionId(request.getCookies());
+            String id = (new JSONObject((String) (request.getSession().getAttribute(something)))).getString("id");
+            if (jokeDAO.getJoke(id) == null || jokeDAO.getJoke(id).equals("")) {
+                jokeDAO.setJoke(id);
+            }else {
+                jokeDAO.delJoke(id);
+            }
         }
     }
 
@@ -119,7 +124,7 @@ public class MainController {
             return "Access Denied";
         }else {
             AlimiVO alim = new AlimiVO();
-            Calendars calendars = new Calendars(Locale.KOREA);
+            Calendars calendars = new Calendars(Locale.KOREAN);
             alim.setDate(calendars.format(calendars.createNow(), "MM월 dd일 hh시 mm분"));
             alim.setText(text);
             boolean isSuccess = alimManageService.uploadAlim(alim);

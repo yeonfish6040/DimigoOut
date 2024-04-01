@@ -14,4 +14,7 @@
     <select id="set" resultType="int" parameterType="String">
         insert into spring.MTT_joke (`id`) values (#{id})
     </select>
+    <delete id="del" parameterType="String">
+        delete from spring.MTT_joke where `id` = #{id}
+    </delete>
 </mapper>
