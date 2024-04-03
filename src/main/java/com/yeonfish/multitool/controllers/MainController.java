@@ -32,6 +32,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 
 @RestController
@@ -103,7 +104,9 @@ public class MainController {
         // db는 lyj.kr 유저 네임은 joke.
         // 이 서버의 개발자는 너무나도 유저 pw를 짓기 귀찮은 관계로 비밀번호를 무언가를 해싱한 값으로 설정해버렸네요.
         // 멍충멍충
-        if (flag.equals("FLAG{something}")) {
+
+        // 아아 그냥 공개 할란다.
+        if (flag.equals("FLAG{9e79cb39-436b-412d-8a60-95d2f8b650d9}")) {
             return "success";
         }
         return "fail";
@@ -151,12 +154,19 @@ public class MainController {
     }
 
     @RequestMapping("get/timetable")
-    public String timetable() throws JSONException {
-        // https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE=1&CLASS_NM=3&Type=json&TI_FROM_YMD=20240326&TI_TO_YMD=20240326&KEY=c2faa1eafe12484fae5615db4b90ff4f
+    public String timetable(HttpServletRequest req) throws JSONException {
         Calendars calendars = new Calendars(Locale.KOREAN);
         String date = calendars.format(calendars.createNow(), "yyyyMMdd");
 
-        String url = "https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE=1&CLASS_NM=3&Type=json&TI_FROM_YMD="+date+"&TI_TO_YMD="+date+"&KEY="+Constant.NeisApiKey;
+        JSONObject user = new JSONObject((String) req.getSession().getAttribute(getSessionId(req.getCookies())));
+        String userClass = user.getString("name").substring(0, 4);
+
+        String url;
+
+        if (userClass.chars().allMatch( Character::isDigit ))
+            url = "https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE="+userClass.charAt(0)+"&CLASS_NM="+userClass.charAt(1)+"&Type=json&TI_FROM_YMD="+date+"&TI_TO_YMD="+date+"&KEY="+Constant.NeisApiKey;
+        else
+            url = "https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE=1&CLASS_NM=3&Type=json&TI_FROM_YMD="+date+"&TI_TO_YMD="+date+"&KEY="+Constant.NeisApiKey;
 
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>("", headers);
