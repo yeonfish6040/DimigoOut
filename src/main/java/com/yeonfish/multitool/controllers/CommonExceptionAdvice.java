@@ -15,8 +15,7 @@ public class CommonExceptionAdvice {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String except(Exception e, Model model) {
-
+    public String handler_500(Exception e, Model model) {
         StringBuffer err = new StringBuffer();
         err.append("\n==================================ERROR OCCURRED==================================\n<br>");
         err.append(getCallerClassName()+" - "+e.getClass()+"\n");
@@ -31,7 +30,7 @@ public class CommonExceptionAdvice {
         model.addAttribute("errmsg", e.getLocalizedMessage());
         model.addAttribute("errs", err.toString());
 
-        return null;
+        return "<script>setTimeout(() => window.location = '/', 4000)</script>";
     }
 
     private static String getCallerClassName() {

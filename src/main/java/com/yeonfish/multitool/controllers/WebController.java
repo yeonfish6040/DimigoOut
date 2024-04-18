@@ -1,26 +1,15 @@
 package com.yeonfish.multitool.controllers;
 
-import com.yeonfish.multitool.beans.dao.JokeDAO;
-import com.yeonfish.multitool.beans.vo.AlimiVO;
+import com.yeonfish.multitool.beans.dao.StatusDAO;
 import com.yeonfish.multitool.devController.logger;
 import com.yeonfish.multitool.services.AlimManageService;
-import com.yeonfish.multitool.util.UUID;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 
 @Controller
 @RequestMapping("/")
@@ -32,7 +21,12 @@ public class WebController {
     AlimManageService alimManageService;
 
     @Autowired
-    JokeDAO jokeDAO;
+    StatusDAO statusDAO;
+
+    @RequestMapping("/check_log")
+    public String logCheck() {
+        return "logCheck";
+    }
 
     @RequestMapping("/seat_change")
     public String seatChange() {

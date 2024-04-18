@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 연결할 인터페이스 경로를 namespace에 작성 -->
+<mapper namespace="com.yeonfish.multitool.mappers.Mapper_status">
+    <select id="get" resultType="statusVO" parameterType="statusVO">
+        select
+            *
+        from
+            spring.MTT_log
+        where
+            `id` = #{id}
+    </select>
+    <insert id="set" parameterType="statusVO">
+        insert into spring.MTT_log (`id`, `status`, `reason`) values (#{id}, ${status}, #{reason})
+    </insert>
+    <delete id="del" parameterType="statusVO">
+        delete from spring.MTT_log where `id` = #{id}
+    </delete>
+</mapper>

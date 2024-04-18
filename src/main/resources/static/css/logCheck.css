@@ -1,0 +1,31 @@
+.main_container {
+    position: absolute;
+    height: 60vh;
+
+    top: 30vh;
+    left: 4vw;
+    right: 4vw;
+
+    padding: 20px;
+
+    font-family: "Gmarket Sans TTF"
+    font-size: 1.65rem;
+    font-weight: 600;
+
+    box-shadow: 0px 0px 20px 20px #f8f8f8;
+    border-radius: 1vw;
+}
+
+.sub_title {
+    font-family: "Gmarket Sans TTF";
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.log_window {
+    height: 42vh;
+}
+
+/*.log_window > .table > thead th {*/
+/*    font-size: 1.2rem;*/
+/*}*/

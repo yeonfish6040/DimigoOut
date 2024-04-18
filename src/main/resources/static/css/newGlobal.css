@@ -98,7 +98,6 @@ html {
     }
 
     .container > .title > .maintitle > .version {
-
-        font-size: 1.2rem;
+        display: none;
     }
 }

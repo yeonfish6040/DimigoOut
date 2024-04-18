@@ -1,5 +1,6 @@
 let timetable;
 let lastTime;
+let currentStatus = 0;
 let currentSubject = "";
 let lastTyping = new Date().getTime();
 let lastText = document.getElementById("alim").value;
@@ -171,12 +172,16 @@ let timeSequence = [
 ];
 
 const timeFormat2sec = (tf) => {
-    return (Math.floor(tf/100)*3600+(tf%100)*60)
+    return (Math.floor(tf/100)*3600+(tf%100)*60);
 }
 
 function initialize() {
     let timetableReq = new XMLHttpRequest();
     timetableReq.open("GET", "/get/timetable");
+
+    $(".input").hide()
+
+    updateStatusList()
 
     setInterval(alimSaver, 100);
     setInterval(updateCurrentTime, 100);
@@ -185,6 +190,10 @@ function initialize() {
     document.getElementById("alim").addEventListener("keydown", lastTypingUpdater);
     document.getElementById("full_screen-btn").addEventListener("click", toggleFullscreen);
     document.getElementById("seat_btn").addEventListener("click", () => location.href = "/seat_change");
+    document.getElementById("checkLog-btn").addEventListener("click", e => window.location = "/check_log");
+    Array.prototype.forEach.call(document.getElementsByClassName("input"), (e) => e.addEventListener("keydown", reason_enter));
+    Array.prototype.forEach.call(document.getElementsByClassName("status_selection"), (e) => {e.addEventListener("click", selector_click)})
+    Array.prototype.forEach.call(document.getElementsByClassName("input_reason"), (e) => e.querySelector("input").addEventListener("focusout", selector_focusout));
 }
 
 function toggleFullscreen(e) {
@@ -228,10 +237,10 @@ function updateCurrentTime() {
             getSubject.onload = (e) => {
                 let result = JSON.parse(e.target.responseText)["hisTimetable"][1]["row"];
                 currentSubject = " ("+result.filter(s => s.PERIO == perio)[0]["ITRT_CNTNT"]+")";
-                console.log(currentSubject)
+                console.log(currentSubject);
             }
             getSubject.send();
-        }else currentSubject = ""
+        }else currentSubject = "";
 
     }
     let timeline = "";
@@ -243,7 +252,7 @@ function alimSaver() {
         lastText = document.getElementById("alim").value;
 
         let save = new XMLHttpRequest();
-        save.open("POST", "/alim/save");
+        save.open("POST", "/set/alim");
         save.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         save.onload = (e) => {
             if (e.target.status === 200) {
@@ -262,6 +271,98 @@ function alimSaver() {
         save.send("text="+lastText);
     }
 }
+
+function selector_click(e) {
+    e.preventDefault();
+
+    let className    = Array.prototype.filter.call(e.target.classList, e => e.startsWith("type_"))[0];
+    let selection = Array.prototype.filter.call(document.getElementsByClassName(className), e => Array.prototype.indexOf.call(e.classList, "status_selection") !== -1);
+    let label = Array.prototype.filter.call(document.getElementsByClassName(className), e => Array.prototype.indexOf.call(e.classList, "label") !== -1);
+    let input = Array.prototype.filter.call(document.getElementsByClassName(className), e => Array.prototype.indexOf.call(e.classList, "input") !== -1);
+
+    let status = className.indexOf("type_water") !== -1 ? 1 : className.indexOf("type_afterClass") !== -1 ? 2 : className.indexOf("type_club") !== -1 ? 3 : className.indexOf("type_etc") !== -1 ? 4 : 0
+
+    if (selection[0].classList.contains("disabled")) return;
+
+    if (selection[0].classList.contains("active") || status === 1) {
+        let register_water = new XMLHttpRequest();
+        register_water.open("POST", "/set/status?status="+status);
+        register_water.setRequestHeader("content-type", "application/x-www-form-urlencoded")
+        register_water.onload = (e) => {
+            // if (register_water.responseText === "true") alert("성공");
+            // else alert("오류발생");
+            if (register_water.responseText === "false") alert("실패")
+            return updateStatusList();
+        }
+        register_water.send();
+    } else {
+        $(label).slideUp();
+        $(input).slideDown();
+        $(input).focus();
+    }
+}
+
+function selector_focusout(e) {
+    e.preventDefault();
+
+    let className    = Array.prototype.filter.call(e.target.classList, e => e.startsWith("type_"))[0];
+    let label = Array.prototype.filter.call(document.getElementsByClassName(className), e => Array.prototype.indexOf.call(e.classList, "label") !== -1);
+    let input = Array.prototype.filter.call(document.getElementsByClassName(className), e => Array.prototype.indexOf.call(e.classList, "input") !== -1);
+
+    input[0].value = "";
+    $(label).slideDown();
+    $(input).slideUp();
+}
+
+function reason_enter(e) {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+
+        let className    = Array.prototype.filter.call(e.target.classList, e => e.startsWith("type_"))[0];
+        let status = className.indexOf("type_water") !== -1 ? 1 : className.indexOf("type_afterClass") !== -1 ? 2 : className.indexOf("type_club") !== -1 ? 3 : className.indexOf("type_etc") !== -1 ? 4 : 0
+
+        let register_status = new XMLHttpRequest();
+        register_status.open("POST", e.target.classList.contains("active") ? "/set/status?status="+status : "/set/status?status="+status+"&reason="+e.target.value);
+        register_status.setRequestHeader("content-type", "application/x-www-form-urlencoded")
+        register_status.onload = (e) => {
+            // if (register_water.responseText === "true") alert("성공");
+            // else alert("오류발생");
+            if (register_status.responseText === "false") alert("실패");
+
+            $("#alim").focus();
+
+            return updateStatusList();
+        }
+        register_status.send();
+    }
+}
+
 function lastTypingUpdater(event) {
     lastTyping = new Date().getTime()
+}
+
+function updateStatusList() {
+    let getCurStatus = new XMLHttpRequest();
+    getCurStatus.open("GET", "/get/status")
+    getCurStatus.onload = (e) => {
+        let status = parseInt(getCurStatus.responseText);
+        switch (status) {
+            case 0:
+                Array.prototype.forEach.call(document.getElementsByClassName("status_selection"), (e) => { e.classList.remove("disabled"); e.classList.remove("active"); e.classes = Array.prototype.join.call(e, " ") })
+                break;
+            case 1:
+                Array.prototype.forEach.call(document.getElementsByClassName("status_selection"), (e) => { e.classList.add("disabled"); e.classList.remove("active"); if (e.classList.contains("type_water")) { e.classList.remove("disabled"); e.classList.add("active") }})
+                break;
+            case 2:
+                Array.prototype.forEach.call(document.getElementsByClassName("status_selection"), (e) => { e.classList.add("disabled"); e.classList.remove("active"); if (e.classList.contains("type_afterClass")) { e.classList.remove("disabled"); e.classList.add("active") }})
+                break;
+            case 3:
+                Array.prototype.forEach.call(document.getElementsByClassName("status_selection"), (e) => { e.classList.add("disabled"); e.classList.remove("active"); if (e.classList.contains("type_club")) { e.classList.remove("disabled"); e.classList.add("active") }})
+                break;
+            case 4:
+                Array.prototype.forEach.call(document.getElementsByClassName("status_selection"), (e) => { e.classList.add("disabled"); e.classList.remove("active"); if (e.classList.contains("type_etc")) { e.classList.remove("disabled"); e.classList.add("active") }})
+                break;
+        }
+    }
+    getCurStatus.send()
 }

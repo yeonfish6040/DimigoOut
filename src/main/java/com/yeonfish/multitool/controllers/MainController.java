@@ -2,11 +2,12 @@ package com.yeonfish.multitool.controllers;
 
 import com.yeonfish.multitool.Constant;
 import com.yeonfish.multitool.beans.dao.AdminDAO;
-import com.yeonfish.multitool.beans.dao.AlimiDAO;
-import com.yeonfish.multitool.beans.dao.JokeDAO;
+import com.yeonfish.multitool.beans.dao.StatusDAO;
 import com.yeonfish.multitool.beans.vo.AlimiVO;
+import com.yeonfish.multitool.beans.vo.StatusVO;
 import com.yeonfish.multitool.devController.logger;
 import com.yeonfish.multitool.services.AlimManageService;
+import com.yeonfish.multitool.services.StatusManageService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,22 +18,15 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.expression.Calendars;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 
 @RestController
@@ -44,10 +38,13 @@ public class MainController {
     private AlimManageService alimManageService;
 
     @Autowired
+    private StatusManageService statusManageService;
+
+    @Autowired
     private AdminDAO adminDAO;
 
     @Autowired
-    private JokeDAO jokeDAO;
+    private StatusDAO statusDAO;
 
     @RequestMapping("/auth")
     public String auth(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
@@ -56,8 +53,8 @@ public class MainController {
         params.put("client_id", Constant.GoogleOauthClientId);
         params.put("client_secret", Constant.GoogleOauthClientPw);
         params.put("grant_type", "authorization_code");
-//        params.put("redirect_uri", "https://localhost/auth");
-        params.put("redirect_uri", "https://dimigo.site/auth");
+        params.put("redirect_uri", "https://localhost/auth");
+//        params.put("redirect_uri", "https://dimigo.site/auth");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(params.toString(), headers);
@@ -112,10 +109,22 @@ public class MainController {
         return "fail";
     }
 
-    @RequestMapping(value = "alim/save", method = RequestMethod.POST)
+    @RequestMapping(value = "set/status", method = RequestMethod.POST)
+    public boolean setStatus(@RequestParam("status") int status, @RequestParam(name = "reason", required = false) String reason, HttpServletRequest request) throws JSONException {
+
+        JSONObject user = getUser(request);
+        String uid = user.getString("id");
+        StatusVO s_user = new StatusVO(); s_user.setId(uid); s_user.setStatus(status); s_user.setReason(reason);
+
+        log.info(reason);
+
+        return statusManageService.updateStatus(s_user);
+    }
+
+    @RequestMapping(value = "set/alim", method = RequestMethod.POST)
     public String saveAlim(@RequestParam("text") String text, HttpServletRequest request, HttpServletResponse response) throws JSONException {
         HttpSession session = request.getSession();
-        JSONObject user = new JSONObject((String) session.getAttribute(getSessionId(request.getCookies())));
+        JSONObject user = getUser(request);
 
         if (adminDAO.getAdmin(user.getString("id")) == null || adminDAO.getAdmin(user.getString("id")).equals("")){
             response.setStatus(403);
@@ -141,25 +150,42 @@ public class MainController {
 //
 //    }
 
-    @RequestMapping(value = "get/background", produces = MediaType.IMAGE_JPEG_VALUE)
+    @RequestMapping(value = "get/status", method = RequestMethod.GET)
+    public int getStatus(HttpServletRequest request) throws JSONException {
+        StatusVO user = new StatusVO(); user.setId(getUser(request).getString("id"));
+
+        StatusVO[] result = statusManageService.getStatus(user);
+        if (result.length == 0) return 0;
+        else return result[0].getStatus();
+    }
+
+    @RequestMapping(value = "get/statusList", method = RequestMethod.GET)
+    public int getStatusList(HttpServletRequest request) throws JSONException {
+        StatusVO user = new StatusVO(); user.setId(getUser(request).getString("id"));
+
+        StatusVO[] result = statusManageService.getStatus(user);
+        if (result.length == 0) return 0;
+        else return result[0].getStatus();
+    }
+
+    @RequestMapping(value = "get/background", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] getImage() throws IOException {
         InputStream in = null;
         if (LocalTime.now(ZoneId.of("Asia/Seoul")).isBefore(LocalTime.of(13, 0)) && LocalTime.now(ZoneId.of("Asia/Seoul")).isAfter(LocalTime.of(4, 0)))
             in = new ClassPathResource("static/image/background_morning.jpg").getInputStream();
-        else if (LocalTime.now(ZoneId.of("Asia/Seoul")).isBefore(LocalTime.of(17, 0)) && LocalTime.now(ZoneId.of("Asia/Seoul")).isAfter(LocalTime.of(8, 0)))
+        else if (LocalTime.now(ZoneId.of("Asia/Seoul")).isBefore(LocalTime.of(16, 0)) && LocalTime.now(ZoneId.of("Asia/Seoul")).isAfter(LocalTime.of(8, 0)))
             in = new ClassPathResource("static/image/background_evening.jpg").getInputStream();
         else
             in = new ClassPathResource("static/image/background_night.jpg").getInputStream();
         return IOUtils.toByteArray(in);
     }
 
-    @RequestMapping("get/timetable")
-    public String timetable(HttpServletRequest req) throws JSONException {
+    @RequestMapping(value = "get/timetable", method = RequestMethod.GET)
+    public String timetable(HttpServletRequest request) throws JSONException {
         Calendars calendars = new Calendars(Locale.KOREAN);
         String date = calendars.format(calendars.createNow(), "yyyyMMdd");
 
-        JSONObject user = new JSONObject((String) req.getSession().getAttribute(getSessionId(req.getCookies())));
-        String userClass = user.getString("name").substring(0, 4);
+        String userClass = getUserClass(getUser(request));
 
         String url;
 
@@ -177,7 +203,7 @@ public class MainController {
         return new JSONObject(exchange.getBody()).toString();
     }
 
-    @RequestMapping("user")
+    @RequestMapping(value = "user", method = RequestMethod.GET)
     public String userInfo(HttpServletRequest request) {
         return (String) request.getSession().getAttribute(getSessionId(request.getCookies()));
     }
@@ -194,6 +220,18 @@ public class MainController {
         return "이 웹 어플리케이션은 사용자의 ";
     }
 
+    private String getUserClass(JSONObject user) throws JSONException {
+        String userClass = user.getString("name").substring(0, 4);
+
+        if (userClass.chars().allMatch( Character::isDigit ))
+            return userClass;
+        else
+            return "";
+    }
+
+    private JSONObject getUser(HttpServletRequest request) throws JSONException {
+        return new JSONObject((String) request.getSession().getAttribute(getSessionId(request.getCookies())));
+    }
 
     private String getSessionId(Cookie[] cookies) {
         String sessionId = "";

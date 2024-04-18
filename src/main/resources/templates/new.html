@@ -5,14 +5,17 @@
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>DimigoOut</title>
 
-    <link rel="stylesheet" href="css/newGlobal.css">
-    <link rel="stylesheet" href="css/new.css">
-
 <!--    font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff" />
+    <link rel="stylesheet" href="./GmarketSansMedium.woff" />
+
+<!--    jquery-->
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <link rel="stylesheet" href="css/newGlobal.css">
+    <link rel="stylesheet" href="css/new.css">
 </head>
 <body>
     <div class="container">
@@ -61,9 +64,35 @@
             </div>
             <div class="menu_element menu_element-container _3">
                 <div class="menutitle alim">
-                    <div class="subtitle">아 ㅋㅋ 어쩔건데</div>
-                    <div class="maintitle highlight">디미 아웃사이드</div>
-                    개발중
+                    <div class="subtitle">이름 이상하게 쓰고 나가면 죽는다</div>
+                    <div class="maintitle highlight" id="checkLog-btn">외출록</div>
+                </div>
+                <div class="selection_container">
+                    <!--                        방과후, 기타, 물/화장실, 동아리-->
+                    <div class="status_selection type_water">
+                        <label class="label type_water" for="input_reason-1">
+                            <div class="text type_water">물 / 화장실</div>
+                        </label>
+                        <div class="input_reason type_water"><input type="text" name="input_reason" class="input type_water" id="input_reason-1"></div>
+                    </div>
+                    <div class="status_selection type_afterClass">
+                        <label class="label type_afterClass" for="input_reason-2">
+                            <div class="text type_afterClass">방과후</div>
+                        </label>
+                        <div class="input_reason type_afterClass"><input type="text" name="input_reason" class="input type_afterClass" id="input_reason-2"></div>
+                    </div>
+                    <div class="status_selection type_club">
+                        <label class="label type_club" for="input_reason-3">
+                            <div class="text type_club">동아리</div>
+                        </label>
+                        <div class="input_reason type_club"><input type="text" name="input_reason" class="input type_club" id="input_reason-3"></div>
+                    </div>
+                    <div class="status_selection type_etc">
+                        <label class="label type_etc" for="input_reason-4">
+                            <div class="text type_etc">기타</div>
+                        </label>
+                        <div class="input_reason type_etc"><input type="text" name="input_reason" class="input type_etc" id="input_reason-4"></div>
+                    </div>
                 </div>
             </div>
             <div class="menu_element aligner"></div>

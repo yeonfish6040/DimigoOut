@@ -4,5 +4,6 @@
 <configuration>
     <typeAliases>
         <typeAlias alias="alimiVO" type="com.yeonfish.multitool.beans.vo.AlimiVO"/>
+        <typeAlias alias="statusVO" type="com.yeonfish.multitool.beans.vo.StatusVO"/>
     </typeAliases>
 </configuration>
