@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
@@ -35,10 +36,11 @@ public class RequestMappingInterceptor implements HandlerInterceptor {
             return true;
 
         if (session.getAttribute(sessionId) == null) {
-            String state = UUID.generate();
-//            session.setAttribute("state", ((List<String>)(session.getAttribute("state"))).add(state));
-//            response.sendRedirect("https://accounts.google.com/o/oauth2/v2/auth?state="+state+"&client_id="+Constant.GoogleOauthClientId+"&response_type=code&hd=dimigo.hs.kr&redirect_uri=https://dimigo.site/auth&scope=email profile openid");
-//            response.sendRedirect("https://accounts.google.com/o/oauth2/v2/auth?state="+state+"&client_id="+Constant.GoogleOauthClientId+"&response_type=code&hd=dimigo.hs.kr&redirect_uri=https://localhost/auth&scope=email profile openid");
+            if (request.getMethod().equals(RequestMethod.POST.name())) {
+                response.sendError(401, "Login required");
+                return false;
+            }
+
             response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://localhost/auth");
 //            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://dimigo.site/auth");
 
