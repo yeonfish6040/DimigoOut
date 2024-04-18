@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.Locale;
 
 
@@ -47,50 +48,26 @@ public class MainController {
     private StatusDAO statusDAO;
 
     @RequestMapping("/auth")
-    public String auth(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
-        JSONObject params = new JSONObject();
-        params.put("code", code);
-        params.put("client_id", Constant.GoogleOauthClientId);
-        params.put("client_secret", Constant.GoogleOauthClientPw);
-        params.put("grant_type", "authorization_code");
-        params.put("redirect_uri", "https://localhost/auth");
-//        params.put("redirect_uri", "https://dimigo.site/auth");
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        HttpEntity<String> entity = new HttpEntity<>(params.toString(), headers);
-
+    public String auth(@RequestParam("token") String token, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+        HttpEntity<String> entity = new HttpEntity<>("", new HttpHeaders());
         RestTemplate rt = new RestTemplate();
-
-//        log.info(params.toString());
-
         ResponseEntity<String> exchange = rt.exchange(
-                "https://oauth2.googleapis.com/token",
-                HttpMethod.POST,
-                entity,
-                String.class
-        );
-
-        String access_token = (new JSONObject(exchange.getBody())).getString("access_token");
-
-        headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer"+access_token);
-        entity = new HttpEntity<>("", headers);
-
-        rt = new RestTemplate();
-        exchange = rt.exchange(
-                "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+                "https://auth.dimigo.net/oauth/public",
                 HttpMethod.GET,
                 entity,
                 String.class
         );
+        String public_key = exchange.getBody();
+        Base64.Decoder decoder = Base64.getUrlDecoder();
 
-        log.info("Login "+exchange.getBody());
+        String decodedJWT = new String(decoder.decode(token.split("[.]")[1]));
 
-        JSONObject result = new JSONObject(exchange.getBody());
+        log.info(decodedJWT);
+
 
         String sessionId = getSessionId(request.getCookies());
         HttpSession session = request.getSession();
-        session.setAttribute(sessionId, result.toString());
+        session.setAttribute(sessionId, (new JSONObject(decodedJWT)).getJSONObject("data").toString());
 
         response.sendRedirect("/");
         return "success";
@@ -187,13 +164,7 @@ public class MainController {
 
         String userClass = getUserClass(getUser(request));
 
-        String url;
-
-        if (userClass.chars().allMatch( Character::isDigit ))
-            url = "https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE="+userClass.charAt(0)+"&CLASS_NM="+userClass.charAt(1)+"&Type=json&TI_FROM_YMD="+date+"&TI_TO_YMD="+date+"&KEY="+Constant.NeisApiKey;
-        else
-            url = "https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE=1&CLASS_NM=3&Type=json&TI_FROM_YMD="+date+"&TI_TO_YMD="+date+"&KEY="+Constant.NeisApiKey;
-
+        String url = "https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE="+userClass.charAt(0)+"&CLASS_NM="+userClass.charAt(1)+"&Type=json&TI_FROM_YMD="+date+"&TI_TO_YMD="+date+"&KEY="+Constant.NeisApiKey;
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>("", headers);
 
@@ -221,12 +192,7 @@ public class MainController {
     }
 
     private String getUserClass(JSONObject user) throws JSONException {
-        String userClass = user.getString("name").substring(0, 4);
-
-        if (userClass.chars().allMatch( Character::isDigit ))
-            return userClass;
-        else
-            return "";
+        return user.getString("number");
     }
 
     private JSONObject getUser(HttpServletRequest request) throws JSONException {
