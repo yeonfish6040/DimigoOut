@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Locale;
 
@@ -62,12 +63,11 @@ public class MainController {
 
         String decodedJWT = new String(decoder.decode(token.split("[.]")[1]));
 
-        log.info(decodedJWT);
-
-
         String sessionId = getSessionId(request.getCookies());
         HttpSession session = request.getSession();
         session.setAttribute(sessionId, (new JSONObject(decodedJWT)).getJSONObject("data").toString());
+
+        log.info(session.getAttribute(sessionId));
 
         response.sendRedirect("/");
         return "success";
@@ -91,7 +91,9 @@ public class MainController {
 
         JSONObject user = getUser(request);
         String uid = user.getString("id");
-        StatusVO s_user = new StatusVO(); s_user.setId(uid); s_user.setStatus(status); s_user.setReason(reason);
+        String name = user.getString("name");
+        String number = user.getString("number");
+        StatusVO s_user = new StatusVO(); s_user.setTime(); s_user.setId(uid); s_user.setName(name); s_user.setNumber(number); s_user.setStatus(status); s_user.setReason(reason);
 
         log.info(reason);
 
@@ -137,12 +139,16 @@ public class MainController {
     }
 
     @RequestMapping(value = "get/statusList", method = RequestMethod.GET)
-    public int getStatusList(HttpServletRequest request) throws JSONException {
-        StatusVO user = new StatusVO(); user.setId(getUser(request).getString("id"));
+    public String getStatusList(HttpServletRequest request) throws JSONException {
+        StatusVO user = new StatusVO(); user.setNumber(getUser(request).getString("number").substring(0,2));
 
-        StatusVO[] result = statusManageService.getStatus(user);
-        if (result.length == 0) return 0;
-        else return result[0].getStatus();
+        StatusVO[] result = statusManageService.getClassStatusList(user);
+        String resultStr = "[";
+        for (int i=0;i<result.length;i++) {
+            resultStr = resultStr + result[i].toString() + ",";
+        }
+        resultStr = resultStr.substring(0, resultStr.length()-1) + "]";
+        return resultStr;
     }
 
     @RequestMapping(value = "get/background", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)

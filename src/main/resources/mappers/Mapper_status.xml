@@ -11,10 +11,21 @@
         where
             `id` = #{id}
     </select>
+    <select id="getList" resultType="statusVO" parameterType="statusVO">
+        select
+            *
+        from
+            spring.MTT_log
+        where
+            `number` like CONCAT(#{number}, '%')
+    </select>
     <insert id="set" parameterType="statusVO">
-        insert into spring.MTT_log (`id`, `status`, `reason`) values (#{id}, ${status}, #{reason})
+        insert into spring.MTT_log (`id`, `time`, `name`, `number`, `status`, `reason`) values (#{id}, #{time}, #{name}, #{number}, ${status}, #{reason})
     </insert>
     <delete id="del" parameterType="statusVO">
         delete from spring.MTT_log where `id` = #{id}
+    </delete>
+    <delete id="clear">
+        truncate table spring.MTT_log
     </delete>
 </mapper>

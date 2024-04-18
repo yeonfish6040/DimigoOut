@@ -9,6 +9,6 @@
         from
             spring.MTT_admins
         where
-            `id` = ${id}
+            `id` = #{id}
     </select>
 </mapper>

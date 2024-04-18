@@ -40,6 +40,11 @@ public class StatusManageService implements StatusManageServiceInter {
     }
 
     @Override
+    public StatusVO[] getClassStatusList(StatusVO statusVO) {
+        return statusDAO.getClassStatusList(statusVO);
+    }
+
+    @Override
     public boolean delStatus(StatusVO statusVO) {
         return statusDAO.delStatus(statusVO);
     }

@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 public interface StatusManageServiceInter {
     public boolean updateStatus(StatusVO statusVO);
     public StatusVO[] getStatus(StatusVO statusVO);
+    public StatusVO[] getClassStatusList(StatusVO statusVO);
     public boolean delStatus(StatusVO statusVO);
 }

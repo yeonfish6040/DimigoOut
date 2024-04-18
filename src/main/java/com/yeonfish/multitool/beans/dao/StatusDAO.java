@@ -16,10 +16,14 @@ public class StatusDAO {
     public StatusVO[] getStatus(StatusVO statusVO) {
         return statusMapper.get(statusVO);
     }
+    public StatusVO[] getClassStatusList(StatusVO statusVO) { return statusMapper.getList(statusVO); }
     public boolean setStatus(StatusVO statusVO) {
         return statusMapper.set(statusVO) == 1;
     }
     public boolean delStatus(StatusVO statusVO) {
         return statusMapper.del(statusVO) == 1;
+    }
+    public boolean clearStatus() {
+        return statusMapper.clear() != 0;
     }
 }

@@ -8,7 +8,7 @@
 
     padding: 20px;
 
-    font-family: "Gmarket Sans TTF"
+    font-family: "Gmarket Sans TTF";
     font-size: 1.65rem;
     font-weight: 600;
 
@@ -19,11 +19,17 @@
 .sub_title {
     font-family: "Gmarket Sans TTF";
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 1000;
 }
 
 .log_window {
     height: 42vh;
+
+    overflow: scroll;
+}
+
+.children > * {
+    font-weight: 200 !important;
 }
 
 /*.log_window > .table > thead th {*/

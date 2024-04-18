@@ -2,6 +2,7 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+
 }
 
 html {
@@ -11,7 +12,7 @@ html {
 }
 
 .highlight {
-    color: #d05276;
+    color: #fc4280;
 }
 
 /*header {*/
