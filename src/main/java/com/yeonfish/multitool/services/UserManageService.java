@@ -28,7 +28,7 @@ public class UserManageService implements UserManageServiceInter {
     public boolean setUser(UserVO user) {
         UserVO tmp = new UserVO();
         tmp.setId(user.getId());
-        UserVO result = getUser(tmp);
+        UserVO result = this.getUser(tmp);
         if (result == null)
             return userDAO.set(user);
         else
@@ -58,7 +58,7 @@ public class UserManageService implements UserManageServiceInter {
 
     @Override
     public boolean isAdmin(UserVO user) {
-        UserVO[] admins = getAdminUsers();
+        UserVO[] admins = this.getAdminUsers();
         for (UserVO admin : admins) {
             if (admin.getId().equals(user.getId())) return true;
         }

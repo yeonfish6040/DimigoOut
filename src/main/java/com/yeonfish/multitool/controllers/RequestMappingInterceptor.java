@@ -20,7 +20,7 @@ public class RequestMappingInterceptor implements HandlerInterceptor {
     private logger log = new logger();
 
     @Autowired
-    UserManageService userManageService;
+    private UserManageService userManageService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
