@@ -158,16 +158,28 @@ let timeSequence = [
         name: "야자 2타임"
     },
     {
-        id: "hakbonggwan",
+        id: "hakbonggwan_prepare",
         from: "2250",
         to: "2400",
-        name: "생활관 생활 ㅎ"
+        name: "샤워 및 취침준비 | 심야자습 이동"
     },
     {
-        id: "hakbonggwan",
+        id: "hakbonggwan_study1",
         from: "0000",
+        to: "0050",
+        name: "취침 | 심야자습 1타임"
+    },
+    {
+        id: "hakbonggwan_study2",
+        from: "0050",
+        to: "0150",
+        name: "취침 | 심야자습 2타임"
+    },
+    {
+        id: "hakbonggwan_sleep",
+        from: "0200",
         to: "0630",
-        name: "생활관 생활 ㅎ"
+        name: "취침"
     }
 ];
 
@@ -224,7 +236,7 @@ function updateCurrentTime() {
     if (lastTime === current) {
         let timeLeft = timeFormat2sec(parseInt(current.to))-(timeFormat2sec(currentTime)+new Date().getSeconds());
         let timeLeftPer = (timeLeft/(timeFormat2sec(parseInt(current.to))-timeFormat2sec(parseInt(current.from)))) * 100;
-        timeLeft = Math.floor(timeLeft / 60) + "분 " + (timeLeft % 60 ? timeLeft % 60 : '00')+"초"
+        timeLeft = (!(Math.floor(timeLeft / 60 / 60) < 1) ? Math.floor(timeLeft / 60 / 60) + "시간 " : "") + Math.floor(timeLeft / 60)%60 + "분 " + (timeLeft % 60 ? timeLeft % 60 : '00')+"초"
         document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .progress_bar > .inner_progress_bar").style.width = (100-timeLeftPer)+"%";
         document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .progress_bar > .timeLeft").innerText = timeLeft+" 남음";
     } else {

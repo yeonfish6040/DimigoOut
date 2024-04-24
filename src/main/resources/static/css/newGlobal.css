@@ -33,7 +33,7 @@ html {
 
 .container {
     position: absolute;
-    top: 5vh;
+    top: 3vh;
     bottom: 0;
     left: 0;
     right: 0;
@@ -85,7 +85,7 @@ html {
 @media only screen and (max-width: 452px) {
     .container > .title {
         position: relative;
-        top: -3vh;
+        top: -5vh;
     }
 
     .container > .title > .subtitle {

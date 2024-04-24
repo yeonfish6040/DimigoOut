@@ -1,17 +1,16 @@
 package com.yeonfish.multitool.controllers;
 
 import com.yeonfish.multitool.Constant;
-import com.yeonfish.multitool.beans.dao.AdminDAO;
-import com.yeonfish.multitool.beans.dao.StatusDAO;
 import com.yeonfish.multitool.beans.vo.AlimiVO;
 import com.yeonfish.multitool.beans.vo.StatusVO;
+import com.yeonfish.multitool.beans.vo.UserVO;
 import com.yeonfish.multitool.devController.logger;
 import com.yeonfish.multitool.services.AlimManageService;
 import com.yeonfish.multitool.services.StatusManageService;
+import com.yeonfish.multitool.services.UserManageService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Locale;
 
@@ -43,10 +41,7 @@ public class MainController {
     private StatusManageService statusManageService;
 
     @Autowired
-    private AdminDAO adminDAO;
-
-    @Autowired
-    private StatusDAO statusDAO;
+    private UserManageService userManageService;
 
     @RequestMapping("/auth")
     public String auth(@RequestParam("token") String token, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
@@ -64,17 +59,19 @@ public class MainController {
         String decodedJWT = new String(decoder.decode(token.split("[.]")[1]));
 
         String sessionId = getSessionId(request.getCookies());
-        HttpSession session = request.getSession();
-        session.setAttribute(sessionId, (new JSONObject(decodedJWT)).getJSONObject("data").toString());
 
-        log.info(session.getAttribute(sessionId));
+        JSONObject user = (new JSONObject(decodedJWT)).getJSONObject("data");
+        UserVO userVO = new UserVO(); userVO.setId(user.getString("id")); userVO.setName(user.getString("name")); userVO.setNumber(user.getString("number")); userVO.setGender(user.getString("gender")); userVO.setType(user.getString("type")); userVO.setProfile_image(user.getString("profile_image"));
+        userVO.setSession(sessionId);
+
+        userManageService.setUser(userVO);
 
         response.sendRedirect("/");
         return "success";
     }
 
     @RequestMapping("joke")
-    public String joke(@RequestParam("flag") String flag, HttpServletRequest request) throws JSONException {
+    public String joke(@RequestParam("flag") String flag, HttpServletRequest request) {
         // db는 lyj.kr 유저 네임은 joke.
         // 이 서버의 개발자는 너무나도 유저 pw를 짓기 귀찮은 관계로 비밀번호를 무언가를 해싱한 값으로 설정해버렸네요.
         // 멍충멍충
@@ -87,13 +84,10 @@ public class MainController {
     }
 
     @RequestMapping(value = "set/status", method = RequestMethod.POST)
-    public boolean setStatus(@RequestParam("status") int status, @RequestParam(name = "reason", required = false) String reason, HttpServletRequest request) throws JSONException {
+    public boolean setStatus(@RequestParam("status") int status, @RequestParam(name = "reason", required = false) String reason, HttpServletRequest request) {
 
-        JSONObject user = getUser(request);
-        String uid = user.getString("id");
-        String name = user.getString("name");
-        String number = user.getString("number");
-        StatusVO s_user = new StatusVO(); s_user.setTime(); s_user.setId(uid); s_user.setName(name); s_user.setNumber(number); s_user.setStatus(status); s_user.setReason(reason);
+        UserVO user = getUser(request);
+        StatusVO s_user = new StatusVO(); s_user.setTime(); s_user.setId(user.getId()); s_user.setName(user.getName()); s_user.setNumber(user.getNumber()); s_user.setStatus(status); s_user.setReason(reason);
 
         log.info(reason);
 
@@ -101,11 +95,8 @@ public class MainController {
     }
 
     @RequestMapping(value = "set/alim", method = RequestMethod.POST)
-    public String saveAlim(@RequestParam("text") String text, HttpServletRequest request, HttpServletResponse response) throws JSONException {
-        HttpSession session = request.getSession();
-        JSONObject user = getUser(request);
-
-        if (adminDAO.getAdmin(user.getString("id")) == null || adminDAO.getAdmin(user.getString("id")).equals("")){
+    public String saveAlim(@RequestParam("text") String text, HttpServletRequest request, HttpServletResponse response) {
+        if (userManageService.isAdmin(getUser(request))){
             response.setStatus(403);
             return "Access Denied";
         }else {
@@ -130,8 +121,8 @@ public class MainController {
 //    }
 
     @RequestMapping(value = "get/status", method = RequestMethod.GET)
-    public int getStatus(HttpServletRequest request) throws JSONException {
-        StatusVO user = new StatusVO(); user.setId(getUser(request).getString("id"));
+    public int getStatus(HttpServletRequest request) {
+        StatusVO user = new StatusVO(); user.setId(getUser(request).getId());
 
         StatusVO[] result = statusManageService.getStatus(user);
         if (result.length == 0) return 0;
@@ -139,8 +130,8 @@ public class MainController {
     }
 
     @RequestMapping(value = "get/statusList", method = RequestMethod.GET)
-    public String getStatusList(HttpServletRequest request) throws JSONException {
-        StatusVO user = new StatusVO(); user.setNumber(getUser(request).getString("number").substring(0,2));
+    public String getStatusList(HttpServletRequest request) {
+        StatusVO user = new StatusVO(); user.setNumber(getUser(request).getNumber().substring(0,2));
 
         StatusVO[] result = statusManageService.getClassStatusList(user);
         String resultStr = "[";
@@ -168,7 +159,7 @@ public class MainController {
         Calendars calendars = new Calendars(Locale.KOREAN);
         String date = calendars.format(calendars.createNow(), "yyyyMMdd");
 
-        String userClass = getUserClass(getUser(request));
+        String userClass = getUser(request).getNumber();
 
         String url = "https://open.neis.go.kr/hub/hisTimetable?SD_SCHUL_CODE=7530560&ATPT_OFCDC_SC_CODE=J10&GRADE="+userClass.charAt(0)+"&CLASS_NM="+userClass.charAt(1)+"&Type=json&TI_FROM_YMD="+date+"&TI_TO_YMD="+date+"&KEY="+Constant.NeisApiKey;
         HttpHeaders headers = new HttpHeaders();
@@ -182,7 +173,7 @@ public class MainController {
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public String userInfo(HttpServletRequest request) {
-        return (String) request.getSession().getAttribute(getSessionId(request.getCookies()));
+        return getUser(request).toString();
     }
 
 
@@ -194,15 +185,14 @@ public class MainController {
 
     @RequestMapping(value = "privacy")
     public String privacy() {
-        return "이 웹 어플리케이션은 사용자의 ";
+        return "이 웹 어플리케이션은 사용자의 개인정보를 저 수면 밑에서 가로체, 여기저기 도용하니 쓸거면 쓰고 말거면 말든가.";
     }
 
-    private String getUserClass(JSONObject user) throws JSONException {
-        return user.getString("number");
-    }
 
-    private JSONObject getUser(HttpServletRequest request) throws JSONException {
-        return new JSONObject((String) request.getSession().getAttribute(getSessionId(request.getCookies())));
+    private UserVO getUser(HttpServletRequest request) {
+        UserVO tmp = new UserVO();
+        tmp.setSession(getSessionId(request.getCookies()));
+        return userManageService.getLoggedInUser(tmp);
     }
 
     private String getSessionId(Cookie[] cookies) {

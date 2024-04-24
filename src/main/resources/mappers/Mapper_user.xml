@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 연결할 인터페이스 경로를 namespace에 작성 -->
+<mapper namespace="com.yeonfish.multitool.mappers.Mapper_user">
+    <select id="get" resultType="userVO" parameterType="userVO">
+        select
+            *
+        from
+            spring.MTT_user
+        where
+            `id` = #{id}
+            or
+            `session` = #{session}
+    </select>
+    <insert id="set" parameterType="userVO">
+        insert into spring.MTT_user (`id`, `number`, `name`, `gender`, `type`, `profile_image`, `session`) VALUES (#{id}, #{number}, #{name}, #{gender}, #{type}, #{profile_image}, #{session})
+    </insert>
+    <update id="update" parameterType="userVO">
+        update spring.MTT_user
+        set
+            `session` = #{session}
+        where `id` = #{id}
+    </update>
+    <select id="getAdmins" resultType="userVO">
+        select
+            user.*
+        from
+            spring.MTT_user user
+        join spring.MTT_admins admin
+        on user.id = admin.id
+    </select>
+    <insert id="setAdmin" parameterType="userVO">
+        insert into spring.MTT_admins (`id`) VALUES ((select `id` from spring.MTT_user where `id` = #{id}))
+    </insert>
+    <delete id="deleteAdmin" parameterType="userVO">
+        delete from spring.MTT_admins where `id` = #{id}
+    </delete>
+</mapper>
