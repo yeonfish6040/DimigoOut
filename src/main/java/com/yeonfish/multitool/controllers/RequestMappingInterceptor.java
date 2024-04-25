@@ -48,8 +48,8 @@ public class RequestMappingInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-//            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://localhost/auth");
-            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://dimigo.site/auth");
+            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://localhost/auth");
+//            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://dimigo.site/auth");
 
             return false;
         }

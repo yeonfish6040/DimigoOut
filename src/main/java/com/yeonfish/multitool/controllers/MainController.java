@@ -96,7 +96,7 @@ public class MainController {
 
     @RequestMapping(value = "set/alim", method = RequestMethod.POST)
     public String saveAlim(@RequestParam("text") String text, HttpServletRequest request, HttpServletResponse response) {
-        if (userManageService.isAdmin(getUser(request))){
+        if (!userManageService.isAdmin(getUser(request))){
             response.setStatus(403);
             return "Access Denied";
         }else {

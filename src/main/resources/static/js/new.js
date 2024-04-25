@@ -160,11 +160,17 @@ let timeSequence = [
     {
         id: "hakbonggwan_prepare",
         from: "2250",
-        to: "2400",
+        to: "2350",
         name: "샤워 및 취침준비 | 심야자습 이동"
     },
     {
-        id: "hakbonggwan_study1",
+        id: "hakbonggwan_study1-1",
+        from: "2350",
+        to: "2450",
+        name: "취침 | 심야자습 1타임"
+    },
+    {
+        id: "hakbonggwan_study1-2",
         from: "0000",
         to: "0050",
         name: "취침 | 심야자습 1타임"
@@ -177,7 +183,7 @@ let timeSequence = [
     },
     {
         id: "hakbonggwan_sleep",
-        from: "0200",
+        from: "0150",
         to: "0630",
         name: "취침"
     }
@@ -198,6 +204,7 @@ function initialize() {
     setInterval(alimSaver, 100);
     setInterval(updateCurrentTime, 100);
 
+    window.addEventListener("message", messageHandler);
     document.addEventListener("fullscreenchange", checkFullscreen);
     document.getElementById("alim").addEventListener("keydown", lastTypingUpdater);
     document.getElementById("full_screen-btn").addEventListener("click", toggleFullscreen);
@@ -236,9 +243,15 @@ function updateCurrentTime() {
     if (lastTime === current) {
         let timeLeft = timeFormat2sec(parseInt(current.to))-(timeFormat2sec(currentTime)+new Date().getSeconds());
         let timeLeftPer = (timeLeft/(timeFormat2sec(parseInt(current.to))-timeFormat2sec(parseInt(current.from)))) * 100;
-        timeLeft = (!(Math.floor(timeLeft / 60 / 60) < 1) ? Math.floor(timeLeft / 60 / 60) + "시간 " : "") + Math.floor(timeLeft / 60)%60 + "분 " + (timeLeft % 60 ? timeLeft % 60 : '00')+"초"
-        document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .progress_bar > .inner_progress_bar").style.width = (100-timeLeftPer)+"%";
-        document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .progress_bar > .timeLeft").innerText = timeLeft+" 남음";
+        timeLeft = { current: current, hours: (!(Math.floor(timeLeft / 60 / 60) < 1) ? Math.floor(timeLeft / 60 / 60) : 0), minutes: Math.floor(timeLeft / 60) % 60, seconds: (timeLeft % 60 ? timeLeft % 60 : 0) }
+        let timeLeft_str = (timeLeft.hours > 0 ? timeLeft.hours+ "시간 " : "") + ( timeLeft.hours > 0 || timeLeft.minutes > 0 ? timeLeft.minutes + "분 ": "") + timeLeft.seconds+"초";
+        if (document.fullscreenElement) {
+            // console.log(JSON.stringify(timeLeft))
+            document.getElementById("notth3dev_timer").contentWindow.postMessage(JSON.stringify(timeLeft))
+        }else {
+            document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .progress_bar > .inner_progress_bar").style.width = (100-timeLeftPer)+"%";
+            document.querySelector(".menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .time_show > .grouper > .progress_bar > .timeLeft").innerText = timeLeft_str+" 남음";
+        }
     } else {
         lastTime = current;
         if (lastTime && lastTime.id.includes("perio")) {
@@ -377,4 +390,9 @@ function updateStatusList() {
         }
     }
     getCurStatus.send()
+}
+
+
+function messageHandler(e) {
+    if (e.data === "ext_fullscreen") toggleFullscreen();
 }

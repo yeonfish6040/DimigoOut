@@ -33,6 +33,9 @@ public class WebController {
         return "seat_change";
     }
 
+    @RequestMapping("/timer")
+    public String timer() { return "timer"; }
+
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model) throws JSONException {
 //        log.info(alimManageService.getAlim());
