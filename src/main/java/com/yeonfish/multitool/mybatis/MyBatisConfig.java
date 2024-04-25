@@ -38,7 +38,7 @@ public class MyBatisConfig {
     } // DataSource 객체에 DBMS 정보 설정
 
 
-
+// 블루 아카이브// 러브라이브 러브라이브 선샤인 러브라이브 니기가사키 가쿠엔 스쿠르 아이도르 도코카이
     @Bean
     public SqlSessionFactory sqlSessionFactory() throws IOException {
         // 세션 팩토리 객체 생성

@@ -2,11 +2,14 @@ package com.yeonfish.multitool.services;
 
 import com.yeonfish.multitool.beans.dao.UserDAO;
 import com.yeonfish.multitool.beans.vo.UserVO;
+import com.yeonfish.multitool.devController.logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserManageService implements UserManageServiceInter {
+    private final logger log = new logger();
+
     @Autowired
     UserDAO userDAO;
 

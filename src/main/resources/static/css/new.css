@@ -107,6 +107,10 @@
     border-radius: 20px;
 }
 
+.menu > .menu_element.menu_element-container._2 > .menu_element.menu_element-container._1 > .notth3dev_timer {
+    display: none;
+}
+
 .menu > .menu_element.menu_element-container._3 > .selection_container {
     display: flex;
     flex-direction: column;
@@ -158,9 +162,9 @@
 
 
 .fullscreen {
-    background: url("/get/background") no-repeat center center;
-    backdrop-filter: blur(5px);
-    background-size: cover;
+    /*background: url("/get/background") no-repeat center center;*/
+    /*backdrop-filter: blur(5px);*/
+    /*background-size: cover;*/
 
     border-radius: 0;
 }
@@ -169,34 +173,50 @@
     display: none;
 }
 
-.fullscreen > .time_show {
+.fullscreen > .notth3dev_timer {
+    display: block !important;
+
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-
-    backdrop-filter: blur(5px) brightness(80%);
-
-    height: 100% !important;
 }
 
-.fullscreen > .time_show > .grouper {
-    height: 50vh;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: space-around;
+.fullscreen > .notth3dev_timer > iframe {
+    height: 100%;
+    width: 100%;
 }
 
-.fullscreen > .time_show > .grouper > .current {
-    font-size: 3em;
+.fullscreen > .time_show {
+    display: none !important;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
 
-    text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
+    /*backdrop-filter: blur(5px) brightness(80%);*/
+
+    /*height: 100% !important;*/
 }
+
+/*.fullscreen > .time_show > .grouper {*/
+/*    height: 50vh;*/
+
+/*    display: flex;*/
+/*    flex-direction: column;*/
+
+/*    align-items: center;*/
+
+/*    justify-content: space-around;*/
+/*}*/
+
+/*.fullscreen > .time_show > .grouper > .current {*/
+/*    font-size: 3em;*/
+
+/*    text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;*/
+/*}*/
 
 .fullscreen > .time_show > .grouper > .progress_bar {
     height: 40%;

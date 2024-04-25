@@ -27,8 +27,8 @@
             user.*
         from
             spring.MTT_user user
-        join spring.MTT_admins admin
-        on user.id = admin.id
+        inner join spring.MTT_admins admins
+        on user.id = admins.id
     </select>
     <insert id="setAdmin" parameterType="userVO">
         insert into spring.MTT_admins (`id`) VALUES ((select `id` from spring.MTT_user where `id` = #{id}))

@@ -1,3 +1,5 @@
+<!-- By notth3dev -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +26,7 @@
     color: #1a1a1a;
   }
 
-  h1 {  
+  h1 {
     margin-bottom: 60px;
     text-align: center;
     font: 300 2.25em 'Lato';
@@ -37,10 +39,10 @@
   }
 
   h2 {
-    margin-bottom: 80px;  
-    text-align: center;  
-    font: 300 0.7em 'Lato'; 
-    text-transform: uppercase;  
+    margin-bottom: 80px;
+    text-align: center;
+    font: 300 0.7em 'Lato';
+    text-transform: uppercase;
   }
 
   .countdown {
@@ -49,9 +51,9 @@
   }
 
   .bloc-time {
-    float: left;    
-    margin-right: 45px;    
-    text-align: center;    
+    float: left;
+    margin-right: 45px;
+    text-align: center;
 
     &:last-child {
       margin-right: 0;
@@ -73,13 +75,13 @@
     width: 100px;
     margin-right: 10px;
     background-color: #fff;
-    border-radius: 8px; 
+    border-radius: 8px;
     box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .2), inset 2px 4px 0 0 rgba(255, 255, 255, .08);
 
     &:last-child {
       margin-right: 0;
     }
-  
+
     >span {
       position: absolute;
       left: 0;
@@ -90,7 +92,7 @@
       color: #FC4280;
     }
 
-    .top, .bottom-back {    
+    .top, .bottom-back {
       &:after {
         content: "";
         position: absolute;
@@ -112,13 +114,13 @@
       transform: perspective(200px);
     }
 
-    .bottom {  
+    .bottom {
       z-index: 1;
-      
+
       &:before {
         content: "";
         position: absolute;
-        display: block; 
+        display: block;
         top: 0;
         left: 0;
         width: 100%;
@@ -131,7 +133,7 @@
       z-index: 2;
       top: 0;
       height: 50%;
-      overflow: hidden;    
+      overflow: hidden;
       background-color: #f7f7f7;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
@@ -173,7 +175,7 @@
 </head>
 <body>
 <div class="wrap">  
-  <h1>시간 - <strong>일과타임</strong></h1>
+  <h1>시간 - <strong id="current_work">일과타임</strong></h1>
 
   <div class="countdown">
     <div class="bloc-time hours" data-init-value="0">
@@ -202,33 +204,33 @@
       </div>
     </div>
 
-    <div class="bloc-time min" data-init-value="30">
+    <div class="bloc-time min" data-init-value="0">
       <span class="count-title">Minutes</span>
 
       <div class="figure min min-1">
-        <span class="top">5</span>
+        <span class="top">0</span>
         <span class="top-back">
-          <span>5</span>
+          <span>0</span>
         </span>
-        <span class="bottom">5</span>
+        <span class="bottom">0</span>
         <span class="bottom-back">
-          <span>5</span>
+          <span>0</span>
         </span>        
       </div>
 
       <div class="figure min min-2">
-       <span class="top">1</span>
+       <span class="top">0</span>
         <span class="top-back">
-          <span>1</span>
+          <span>0</span>
         </span>
-        <span class="bottom">1</span>
+        <span class="bottom">0</span>
         <span class="bottom-back">
-          <span>1</span>
+          <span>0</span>
         </span>
       </div>
     </div>
 
-    <div class="bloc-time sec" data-init-value="15">
+    <div class="bloc-time sec" data-init-value="10">
       <span class="count-title">Seconds</span>
 
         <div class="figure sec sec-1">
@@ -264,6 +266,7 @@
     countdown_interval: null,
     total_seconds     : 0,
     init: function() {
+      this.lastTime = "";
       this.$ = {
         hours  : this.$el.find('.bloc-time.hours .figure'),
         minutes: this.$el.find('.bloc-time.min .figure'),
@@ -277,6 +280,15 @@
       this.total_seconds = this.values.hours * 60 * 60 + (this.values.minutes * 60) + this.values.seconds;
 
       this.count();    
+    },
+    updateTime: function(data) {
+      if (data.current !== this.lastTime) document.getElementById("current_work").innerText = data.current.name, this.lastTime = data.current;
+      this.values = {
+        hours  : data.hours,
+        minutes: data.minutes,
+        seconds: data.seconds
+      };
+      this.total_seconds = this.values.hours * 60 * 60 + (this.values.minutes * 60) + this.values.seconds;
     },
     count: function() {
       var that    = this,
@@ -351,6 +363,11 @@
   };
   $(function() {
     Countdown.init();
+
+    window.addEventListener("message", (e) => {
+      Countdown.updateTime(JSON.parse(e.data))
+    })
+    document.addEventListener("click", (e) => window.parent.postMessage("ext_fullscreen"))
   });
 </script>
 </body>
