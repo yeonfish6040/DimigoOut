@@ -188,25 +188,6 @@
     display: none !important;
 }
 
-.fullscreen > .time_show > .grouper > .progress_bar {
-    height: 40%;
-    width: 92% !important;
-    padding: 15px !important;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-
-    background-color: rgba(211, 211, 211, 0.5) !important;
-
-    font-size: 2em;
-    -webkit-text-stroke: 1px #000000;
-}
-
-.fullscreen > .time_show > .grouper > .progress_bar {
-    background-color: rgba(211, 211, 211, 0.5);
-}
-
 .disabled {
     background-color: gray !important;
 }
