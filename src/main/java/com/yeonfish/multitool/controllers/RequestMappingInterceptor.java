@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Component
 public class RequestMappingInterceptor implements HandlerInterceptor {
 
@@ -37,8 +40,43 @@ public class RequestMappingInterceptor implements HandlerInterceptor {
         if (!hasCookie)
             response.addCookie(new Cookie("sessionId", sessionId));
 
-        if (request.getRequestURI().endsWith("/auth"))
+        if (request.getRequestURI().startsWith("/public") && !request.getRequestURI().contains(".."))
             return true;
+
+
+//        String otp = "";
+//        if (request.getQueryString() != null) {
+//            String[] queries = request.getQueryString().split("&");
+//            for (String query : queries) {
+//                if (query.split("=").length == 2 && query.split("=")[0].equals("otp")) {
+//                    otp = query.split("=")[1];
+//                }
+//            }
+//        }
+//
+//        boolean otpSession = false;
+//        HttpSession session = request.getSession();
+//        if (!otp.isEmpty() && session.getAttribute("otp") != null) {
+//            ArrayList<Integer> otps = (ArrayList<Integer>) session.getAttribute("otp");
+//            if (otps.contains(otp)) {
+//                otps.remove(otp);
+//                otpSession = true;
+//            }
+//        }
+//
+//        if (otpSession || (session.getAttribute("sessions") != null && ((ArrayList<String>)session.getAttribute("sessions")).contains(sessionId))) {
+//            if (session.getAttribute("sessions") == null) {
+//                ArrayList<String> sessions = new ArrayList<>();
+//                if (otpSession) sessions.add(sessionId);
+//                session.setAttribute("sessions", sessions);
+//            }else if (otpSession) {
+//                ArrayList<String> sessions = (ArrayList<String>)session.getAttribute("sessions");
+//                sessions.add(sessionId);
+//                session.setAttribute("sessions", sessions);
+//            }
+//            if (session.getAttribute("sessions") != null && ((ArrayList<String>)session.getAttribute("sessions")).contains(sessionId))
+//                return true;
+//        }
 
         UserVO tmp = new UserVO();
         tmp.setSession(sessionId);
@@ -48,8 +86,8 @@ public class RequestMappingInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-//            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://localhost/auth");
-            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://dimigo.site/auth");
+//            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://localhost/public/auth");
+            response.sendRedirect("https://auth.dimigo.net/oauth?client="+Constant.DimigoInClientId+"&redirect=https://dimigo.site/public/auth");
 
             return false;
         }

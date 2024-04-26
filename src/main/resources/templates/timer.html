@@ -6,7 +6,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Killjoy Countdown</title>
+<link rel="stylesheet" href="/GmarketSansMedium.woff" />
 <style>
+  * {
+    font-family: "Gmarket Sans TTF", sans-serif !important;
+  }
+
   body {
     background-color: #f2f1ed;
   }
@@ -34,7 +39,6 @@
   }
 
   strong {
-    font-weight: 400;
     color: #FC4280;
   }
 
@@ -175,7 +179,7 @@
 </head>
 <body>
 <div class="wrap">  
-  <h1>시간 - <strong id="current_work" sytle="font-weight:1000 !important;">일과타임</strong></h1>
+  <h1>시간 : <strong id="current_work" style="font-weight:1000 !important;">일과타임</strong></h1>
 
   <div class="countdown">
     <div class="bloc-time hours" data-init-value="0">
@@ -282,7 +286,7 @@
       this.count();    
     },
     updateTime: function(data) {
-      if (data.current !== this.lastTime) document.getElementById("current_work").innerText = data.current.name, this.lastTime = data.current;
+      if (data.current !== this.lastTime) document.getElementById("current_work").innerText = data.current.name+" "+data.subject, this.lastTime = data.current;
       this.values = {
         hours  : data.hours,
         minutes: data.minutes,

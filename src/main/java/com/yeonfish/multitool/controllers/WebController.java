@@ -33,15 +33,18 @@ public class WebController {
         return "seat_change";
     }
 
-    @RequestMapping("/timer")
-    public String timer() { return "timer"; }
-
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model) throws JSONException {
 //        log.info(alimManageService.getAlim());
         model.addAttribute("alim", alimManageService.getAlim());
         return "new";
     }
+
+    @RequestMapping("/public/timer_core")
+    public String timer() { return "timer"; }
+
+    @RequestMapping("/public/timer")
+    public String timerPublic() { return "timer_public"; }
 
     private String getSessionId(Cookie[] cookies) {
         String sessionId = "";

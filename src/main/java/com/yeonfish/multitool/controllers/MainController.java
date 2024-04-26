@@ -11,6 +11,7 @@ import com.yeonfish.multitool.services.UserManageService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Locale;
 
@@ -43,7 +45,7 @@ public class MainController {
     @Autowired
     private UserManageService userManageService;
 
-    @RequestMapping("/auth")
+    @RequestMapping("/public/auth")
     public String auth(@RequestParam("token") String token, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
         HttpEntity<String> entity = new HttpEntity<>("", new HttpHeaders());
         RestTemplate rt = new RestTemplate();
@@ -114,6 +116,25 @@ public class MainController {
             }
         }
     }
+
+//    @RequestMapping(value = "set/otp", method = RequestMethod.POST)
+//    public String setOtp(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+//        if (!userManageService.isAdmin(getUser(request))) {
+//            response.sendError(403, "Access denied  ");
+//            return "Access Denied";
+//        }
+//
+//        int random_int = (int)(Math.random() * (999999 - 100000 + 1) + 100000);
+//        if (session.getAttribute("otp") == null) {
+//            ArrayList<Integer> otps = new ArrayList<>();
+//            otps.add(random_int);
+//            session.setAttribute("otp", otps);
+//        }else {
+//            ArrayList<Integer> otps = (ArrayList<Integer>) session.getAttribute("otp"); otps.add(random_int);
+//            session.setAttribute("otp", otps);
+//        }
+//        return String.valueOf(random_int);
+//    }
 
 //    @RequestMapping("get/dimiOutside")
 //    public String getDimiOutSide() {

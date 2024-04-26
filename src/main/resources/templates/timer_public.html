@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DimigoOut</title>
+
+    <!-- font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap">
+    <link rel="stylesheet" href="/GmarketSansMedium.woff" />
+
+    <style>
+        * {
+            font-family: "Gmarket Sans TTF", sans-serif !important;
+        }
+    </style>
+</head>
+<body id="fullscreen" style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0; margin: 0;'>
+<iframe src="/public/timer_core" frameborder="0" id="notth3dev_timer" style="height: 100%; width: 100%;"></iframe>
+</body>
+<script>
+    let lastTime;
+    let currentSubject = "";
+    let timeSequence = [
+        {
+            id: "wakeup",
+            from: "0630",
+            to: "0720",
+            name: "기상 및 인원점검"
+        },
+        {
+            id: "breakfast",
+            from: "0720",
+            to: "0815",
+            name: "아침식사"
+        },
+        {
+            id: "morningProgram",
+            from: "0815",
+            to: "0850",
+            name: "아침 프로그램"
+        },
+        {
+            id: "prepareForLecture",
+            from: "0850",
+            to: "0900",
+            name: "조회 및 수업준비"
+        },
+        {
+            id: "perio_1",
+            from: "0900",
+            to: "0950",
+            name: "1교시"
+        },
+        {
+            id: "rest",
+            from: "0950",
+            to: "1000",
+            name: "쉬는시간"
+        },
+        {
+            id: "perio_2",
+            from: "1000",
+            to: "1050",
+            name: "2교시"
+        },
+        {
+            id: "rest",
+            from: "1050",
+            to: "1100",
+            name: "쉬는시간"
+        },
+        {
+            id: "perio_3",
+            from: "1100",
+            to: "1150",
+            name: "3교시"
+        },
+        {
+            id: "rest",
+            from: "1150",
+            to: "1200",
+            name: "쉬는시간"
+        },
+        {
+            id: "perio_4",
+            from: "1200",
+            to: "1250",
+            name: "4교시"
+        },
+        {
+            id: "launch",
+            from: "1250",
+            to: "1350",
+            name: "점심시간"
+        },
+        {
+            id: "perio_5",
+            from: "1350",
+            to: "1440",
+            name: "5교시"
+        },
+        {
+            id: "rest",
+            from: "1440",
+            to: "1450",
+            name: "쉬는시간"
+        },
+        {
+            id: "perio_6",
+            from: "1450",
+            to: "1540",
+            name: "6교시"
+        },
+        {
+            id: "rest",
+            from: "1540",
+            to: "1550",
+            name: "쉬는시간"
+        },
+        {
+            id: "perio_7",
+            from: "1550",
+            to: "1640",
+            name: "7교시"
+        },
+        {
+            id: "afterSchoolPrepare",
+            from: "1640",
+            to: "1710",
+            name: "종례, 청소 및 방과후 수업 준비"
+        },
+        {
+            id: "afterSchool_1",
+            from: "1710",
+            to: "1750",
+            name: "방과후 수업 1타임"
+        },
+        {
+            id: "afterSchool_rest",
+            from: "1750",
+            to: "1755",
+            name: "방과후 수업 쉬는 시간"
+        },
+        {
+            id: "afterSchool_2",
+            from: "1755",
+            to: "1835",
+            name: "방과후 수업 2타임"
+        },
+        {
+            id: "dinner",
+            from: "1830",
+            to: "1950",
+            name: "저녁식사"
+        },
+        {
+            id: "selfStudy_1",
+            from: "1950",
+            to: "2110",
+            name: "야자 1타임"
+        },
+        {
+            id: "selfStudy_rest",
+            from: "2110",
+            to: "2130",
+            name: "야자 쉬는시간"
+        },
+        {
+            id: "selfStudy_2",
+            from: "2130",
+            to: "2250",
+            name: "야자 2타임"
+        },
+        {
+            id: "hakbonggwan_prepare",
+            from: "2250",
+            to: "2350",
+            name: "샤워 및 취침준비 | 심야자습 이동"
+        },
+        {
+            id: "hakbonggwan_study1-1",
+            from: "2350",
+            to: "2450",
+            name: "취침 | 심야자습 1타임"
+        },
+        {
+            id: "hakbonggwan_study1-2",
+            from: "0000",
+            to: "0050",
+            name: "취침 | 심야자습 1타임"
+        },
+        {
+            id: "hakbonggwan_study2",
+            from: "0050",
+            to: "0150",
+            name: "취침 | 심야자습 2타임"
+        },
+        {
+            id: "hakbonggwan_sleep",
+            from: "0150",
+            to: "0630",
+            name: "취침"
+        }
+    ];
+
+    const timeFormat2sec = (tf) => {
+        return (Math.floor(tf/100)*3600+(tf%100)*60);
+    }
+
+    function toggleFullscreen(e) {
+        if (!document.fullscreenElement) {
+            document.getElementById("fullscreen").requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    function updateCurrentTime() {
+        // let currentTime = 1430;
+        let currentTime = new Date().getHours()*100+new Date().getMinutes();
+        let current = timeSequence.filter(e => parseInt(e.from) <= currentTime && parseInt(e.to) > currentTime);
+        if (current.length === 0)
+            current = { name: "쉬는시간", id: "rest", to: currentTime+(10-currentTime%10), from: currentTime+(10-currentTime%10)-10 };
+        else
+            current = current[0];
+
+        if (lastTime === current) {
+            let timeLeft = timeFormat2sec(parseInt(current.to))-(timeFormat2sec(currentTime)+new Date().getSeconds());
+            timeLeft = { current: current, subject: currentSubject, hours: (!(Math.floor(timeLeft / 60 / 60) < 1) ? Math.floor(timeLeft / 60 / 60) : 0), minutes: Math.floor(timeLeft / 60) % 60, seconds: (timeLeft % 60 ? timeLeft % 60 : 0) }
+            if (current.name.startsWith("selfStudy") || !current.name.endsWith("rest")) {
+                if (new Date().getHours()*60+new Date().getSeconds() - timeFormat2sec(current.from) < 600*3)
+                    currentSubject = " (이동 불가)"
+                else
+                    currentSubject = " (이동 가능)"
+            }
+            // console.log(JSON.stringify(timeLeft))
+            document.getElementById("notth3dev_timer").contentWindow.postMessage(JSON.stringify(timeLeft))
+        } else {
+            lastTime = current;
+            if (lastTime && lastTime.id.includes("perio")) {
+                let perio = lastTime.id.replace("perio_", "");
+
+                let getSubject = new XMLHttpRequest();
+                getSubject.open("GET", "/get/timetable");
+                getSubject.onload = (e) => {
+                    let result = JSON.parse(e.target.responseText)["hisTimetable"][1]["row"];
+                    currentSubject = " ("+result.filter(s => s.PERIO == perio)[0]["ITRT_CNTNT"]+")";
+                    console.log(currentSubject);
+                }
+                getSubject.send();
+            }else currentSubject = "";
+
+        }
+    }
+
+    setInterval(updateCurrentTime, 100);
+    document.addEventListener("click", toggleFullscreen)
+    window.addEventListener("message", (e) => {if (e.data === "ext_fullscreen") toggleFullscreen();});
+
+</script>
+</html>
