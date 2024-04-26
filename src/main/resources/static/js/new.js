@@ -246,7 +246,7 @@ function updateCurrentTime() {
         timeLeft = { current: current, subject: currentSubject, hours: (!(Math.floor(timeLeft / 60 / 60) < 1) ? Math.floor(timeLeft / 60 / 60) : 0), minutes: Math.floor(timeLeft / 60) % 60, seconds: (timeLeft % 60 ? timeLeft % 60 : 0) }
         let timeLeft_str = (timeLeft.hours > 0 ? timeLeft.hours+ "시간 " : "") + ( timeLeft.hours > 0 || timeLeft.minutes > 0 ? timeLeft.minutes + "분 ": "") + timeLeft.seconds+"초";
         if (current.name.startsWith("selfStudy") || !current.name.endsWith("rest")) {
-            if (new Date().getHours()*60+new Date().getSeconds() - timeFormat2sec(current.from) < 600*3)
+            if (((new Date().getHours()*3600+new Date().getMinutes()*60+new Date().getSeconds()) - timeFormat2sec(current.from)) < (600*3))
                 currentSubject = " (이동 불가)"
             else
                 currentSubject = " (이동 가능)"
