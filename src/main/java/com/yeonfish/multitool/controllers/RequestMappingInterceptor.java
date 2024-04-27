@@ -40,8 +40,11 @@ public class RequestMappingInterceptor implements HandlerInterceptor {
         if (!hasCookie)
             response.addCookie(new Cookie("sessionId", sessionId));
 
-        if (request.getRequestURI().startsWith("/public") && !request.getRequestURI().contains(".."))
-            return true;
+        if (
+                (request.getRequestURI().startsWith("/public") && !request.getRequestURI().contains(".."))
+                ||
+                (request.getRequestURI().startsWith("/sounds") && !request.getRequestURI().contains(".."))
+            ) return true;
 
 
 //        String otp = "";

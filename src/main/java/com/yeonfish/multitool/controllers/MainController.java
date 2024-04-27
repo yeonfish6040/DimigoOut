@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.thymeleaf.expression.Calendars;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -70,6 +72,89 @@ public class MainController {
 
         response.sendRedirect("/");
         return "success";
+    }
+
+    @RequestMapping("/public/schedule")
+    public String schedule(HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+        JSONArray weekday = new JSONArray();
+        weekday.put(scheduleMaker("wakeup", "0630", "0720", "기상 및 인원점검"));
+        weekday.put(scheduleMaker("breakfast", "0720", "0815", "아침식사"));
+        weekday.put(scheduleMaker("morningProgram", "0815", "0850", "아침 프로그램"));
+        weekday.put(scheduleMaker("prepareForLecture", "0850", "0900", "조회 및 수업준비"));
+        weekday.put(scheduleMaker("perio_1", "0900", "0950", "1교시"));
+        weekday.put(scheduleMaker("rest", "0950", "1000", "쉬는시간"));
+        weekday.put(scheduleMaker("perio_2", "1000", "1050", "2교시"));
+        weekday.put(scheduleMaker("rest", "1050", "1100", "쉬는시간"));
+        weekday.put(scheduleMaker("perio_3", "1100", "1150", "3교시"));
+        weekday.put(scheduleMaker("rest", "1150", "1200", "쉬는시간"));
+        weekday.put(scheduleMaker("perio_4", "1200", "1250", "4교시"));
+        weekday.put(scheduleMaker("launch", "1250", "1350", "점심시간"));
+        weekday.put(scheduleMaker("perio_5", "1350", "1440", "5교시"));
+        weekday.put(scheduleMaker("rest", "1440", "1450", "쉬는시간"));
+        weekday.put(scheduleMaker("perio_6", "1450", "1540", "6교시"));
+        weekday.put(scheduleMaker("rest", "1540", "1550", "쉬는시간"));
+        weekday.put(scheduleMaker("perio_7", "1550", "1640", "7교시"));
+        weekday.put(scheduleMaker("afterSchoolPrepare", "1640", "1710", "종례, 청소 및 방과후 수업 준비"));
+        weekday.put(scheduleMaker("afterSchool_study-1", "1710", "1750", "방과후 수업 1타임"));
+        weekday.put(scheduleMaker("afterSchool_study-rest", "1750", "1755", "방과후 수업 쉬는 시간"));
+        weekday.put(scheduleMaker("afterSchool_study-2", "1755", "1835", "방과후 수업 2타임"));
+        weekday.put(scheduleMaker("dinner", "1830", "1950", "저녁식사"));
+        weekday.put(scheduleMaker("self_study-1", "1950", "2110", "야자 1타임"));
+        weekday.put(scheduleMaker("self_study-rest", "2110", "2130", "야자 쉬는시간"));
+        weekday.put(scheduleMaker("self_study-2", "2130", "2250", "야자 2타임"));
+        weekday.put(scheduleMaker("hakbonggwan_prepare", "2250", "2350", "샤워 및 취침준비 | 심야자습 이동"));
+        weekday.put(scheduleMaker("hakbonggwan_study1-1", "2350", "2450", "취침 | 심야자습 1타임"));
+        weekday.put(scheduleMaker("hakbonggwan_study1-2", "0000", "0050", "취침 | 심야자습 1타임"));
+        weekday.put(scheduleMaker("hakbonggwan_study2", "0050", "0150", "취침 | 심야자습 2타임"));
+        weekday.put(scheduleMaker("hakbonggwan_sleep", "0150", "0630", "취침"));
+
+        JSONArray saturday = new JSONArray();
+        saturday.put(scheduleMaker("wakeup", "0700", "0750", "기상 및 인원점검"));
+        saturday.put(scheduleMaker("breakfast", "0750", "0810", "아침식사"));
+        saturday.put(scheduleMaker("fix_you", "0810", "0850", "개인정비"));
+        saturday.put(scheduleMaker("personnel_check", "0850", "0900", "인원 점검"));
+        saturday.put(scheduleMaker("morning_study-1", "0900", "1020", "오전 자습 1타임"));
+        saturday.put(scheduleMaker("morning_study-rest", "1020", "1040", "오전 자습 쉬는시간"));
+        saturday.put(scheduleMaker("morning_study-2", "1040", "1200", "오전 자습 2타임"));
+        saturday.put(scheduleMaker("launch", "1200", "1400", "점심시간"));
+        saturday.put(scheduleMaker("afternoon_study-1", "1400", "1600", "오후 자습 1타임"));
+        saturday.put(scheduleMaker("afternoon_study-rest", "1600", "1620", "오후 자습 쉬는시간"));
+        saturday.put(scheduleMaker("afternoon_study-2", "1620", "1800", "오후 자습 2타임"));
+        saturday.put(scheduleMaker("dinner", "1800", "2000", "저녁식사"));
+        saturday.put(scheduleMaker("evening_study-1", "2000", "2220", "야간 자습 타임"));
+        saturday.put(scheduleMaker("hakbonggwan_prepare", "2220", "2350", "샤워 및 취침준비 | 심야자습 이동"));
+        saturday.put(scheduleMaker("hakbonggwan_study1-1", "2350", "2450", "취침 | 심야자습 1타임"));
+        saturday.put(scheduleMaker("hakbonggwan_study1-2", "0000", "0050", "취침 | 심야자습 1타임"));
+        saturday.put(scheduleMaker("hakbonggwan_study2", "0050", "0150", "취침 | 심야자습 2타임"));
+        saturday.put(scheduleMaker("hakbonggwan_sleep", "0150", "0630", "취침"));
+
+        JSONArray sunday = new JSONArray();
+        saturday.put(scheduleMaker("wakeup", "0700", "0750", "기상 및 인원점검"));
+        saturday.put(scheduleMaker("breakfast", "0750", "0810", "아침식사"));
+        saturday.put(scheduleMaker("fix_you", "0810", "0830", "개인정비"));
+        saturday.put(scheduleMaker("personnel_check", "0830", "0900", "인원 점검"));
+        saturday.put(scheduleMaker("morning_study-1", "0900", "1020", "오전 자습 1타임"));
+        saturday.put(scheduleMaker("morning_study-rest", "1020", "1040", "오전 자습 쉬는시간"));
+        saturday.put(scheduleMaker("morning_study-2", "1040", "1200", "오전 자습 2타임"));
+        saturday.put(scheduleMaker("launch", "1200", "1400", "점심시간"));
+        saturday.put(scheduleMaker("afternoon_study-1", "1400", "1600", "오후 자습 1타임"));
+        saturday.put(scheduleMaker("afternoon_study-rest", "1600", "1620", "오후 자습 쉬는시간"));
+        saturday.put(scheduleMaker("afternoon_study-2", "1620", "1800", "오후 자습 2타임"));
+        saturday.put(scheduleMaker("dinner", "1800", "2000", "저녁식사"));
+        saturday.put(scheduleMaker("evening_study-1", "2000", "2220", "야간 자습 타임"));
+        saturday.put(scheduleMaker("hakbonggwan_prepare", "2220", "2350", "샤워 및 취침준비 | 심야자습 이동"));
+        saturday.put(scheduleMaker("hakbonggwan_study1-1", "2350", "2450", "취침 | 심야자습 1타임"));
+        saturday.put(scheduleMaker("hakbonggwan_study1-2", "0000", "0050", "취침 | 심야자습 1타임"));
+        saturday.put(scheduleMaker("hakbonggwan_study2", "0050", "0150", "취침 | 심야자습 2타임"));
+        saturday.put(scheduleMaker("hakbonggwan_sleep", "0150", "0630", "취침"));
+
+        LocalDate date = LocalDate.now();
+        if (date.getDayOfWeek().getValue() < 6)
+            return weekday.toString();
+        else if (date.getDayOfWeek().getValue() == 6)
+            return saturday.toString();
+        else
+            return sunday.toString();
     }
 
     @RequestMapping("joke")
@@ -225,5 +310,14 @@ public class MainController {
                 }
 
         return sessionId;
+    }
+
+    private static JSONObject scheduleMaker(String id, String from, String to, String name) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("from", from);
+        jsonObject.put("to", to);
+        jsonObject.put("name", name);
+        return jsonObject;
     }
 }
